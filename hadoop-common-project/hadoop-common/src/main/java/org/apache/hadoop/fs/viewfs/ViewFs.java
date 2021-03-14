@@ -790,7 +790,7 @@ public class ViewFs extends AbstractFileSystem {
       return new FileStatus(0, true, 0, 0, creationTime, creationTime,
           PERMISSION_555, ugi.getUserName(), ugi.getGroupNames()[0],
           new Path(theInternalDir.fullPath).makeQualified(
-              myUri, null));
+              myUri, null), "default");
     }
     
     @Override
@@ -811,12 +811,12 @@ public class ViewFs extends AbstractFileSystem {
             PERMISSION_555, ugi.getUserName(), ugi.getGroupNames()[0],
             inodelink.getTargetLink(),
             new Path(inode.fullPath).makeQualified(
-                myUri, null));
+                myUri, null), "default");
       } else {
         result = new FileStatus(0, true, 0, 0, creationTime, creationTime,
           PERMISSION_555, ugi.getUserName(), ugi.getGroupNames()[0],
           new Path(inode.fullPath).makeQualified(
-              myUri, null));
+              myUri, null), "default");
       }
       return result;
     }
@@ -856,13 +856,13 @@ public class ViewFs extends AbstractFileSystem {
             PERMISSION_555, ugi.getUserName(), ugi.getGroupNames()[0],
             link.getTargetLink(),
             new Path(inode.fullPath).makeQualified(
-                myUri, null));
+                myUri, null), "default");
         } else {
           result[i++] = new FileStatus(0, true, 0, 0,
             creationTime, creationTime,
             PERMISSION_555, ugi.getUserName(), ugi.getGroupNames()[0],
             new Path(inode.fullPath).makeQualified(
-                myUri, null));
+                myUri, null), "default");
         }
       }
       return result;

@@ -222,7 +222,7 @@ public class TestAclCommands {
         FsAction.READ_EXECUTE);
       Path path = new Path("/foo");
       FileStatus stat = new FileStatus(1000, true, 3, 1000, 0, 0, perm, "owner",
-        "group", path);
+        "group", path, "testaclcommands");
       return new FileStatus[] { stat };
     }
 

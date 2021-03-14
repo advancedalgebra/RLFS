@@ -609,7 +609,7 @@ public class RawLocalFileSystem extends FileSystem {
 
   @Deprecated
   static class DeprecatedRawLocalFileStatus extends FileStatus {
-    /* We can add extra fields here. It breaks at least CopyFiles.FilePair().
+    /* We can add extra fields here. It breaks at least CopyFiles.FilePairf.ff.f().
      * We recognize if the information is already loaded by check if
      * onwer.equals("").
      */
@@ -848,7 +848,7 @@ public class RawLocalFileSystem extends FileSystem {
           fs.getOwner(),
           fs.getGroup(),
           new Path(target),
-          f);
+          f, fs.getTag());
     } catch (FileNotFoundException e) {
       /* The exists method in the File class returns false for dangling
        * links so we can get a FileNotFoundException for links that exist.
@@ -858,7 +858,7 @@ public class RawLocalFileSystem extends FileSystem {
        */
       if (!target.isEmpty()) {
         return new FileStatus(0, false, 0, 0, 0, 0, FsPermission.getDefault(),
-            "", "", new Path(target), f);
+            "", "", new Path(target), f, "math");
       }
       // f refers to a file or directory that does not exist
       throw e;

@@ -60,7 +60,7 @@ class Ls extends FsCommand {
   protected final SimpleDateFormat dateFormat =
     new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-  protected int maxRepl = 3, maxLen = 10, maxOwner = 0, maxGroup = 0;
+  protected int maxRepl = 3, maxLen = 10, maxOwner = 0, maxGroup = 0, maxTag = 0;
   protected String lineFormat;
   protected boolean dirRecurse;
 
@@ -112,6 +112,7 @@ class Ls extends FsCommand {
         (stat.isFile() ? stat.getReplication() : "-"),
         stat.getOwner(),
         stat.getGroup(),
+        stat.getTag(),
         formatSize(stat.getLen()),
         dateFormat.format(new Date(stat.getModificationTime())),
         item
@@ -130,6 +131,7 @@ class Ls extends FsCommand {
       maxLen   = maxLength(maxLen, stat.getLen());
       maxOwner = maxLength(maxOwner, stat.getOwner());
       maxGroup = maxLength(maxGroup, stat.getGroup());
+      maxTag = maxLength(maxTag, stat.getTag());
     }
 
     StringBuilder fmt = new StringBuilder();
@@ -140,6 +142,7 @@ class Ls extends FsCommand {
     // http://docs.oracle.com/javase/1.5.0/docs/api/java/util/Formatter.html#intFlags
     fmt.append((maxOwner > 0) ? "%-" + maxOwner + "s " : "%s");
     fmt.append((maxGroup > 0) ? "%-" + maxGroup + "s " : "%s");
+    fmt.append((maxTag > 0) ? "%-" + maxTag + "s " : "%s");
     fmt.append("%"  + maxLen   + "s ");
     fmt.append("%s %s"); // mod time & path
     lineFormat = fmt.toString();

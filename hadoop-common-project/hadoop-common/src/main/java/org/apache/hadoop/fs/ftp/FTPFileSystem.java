@@ -476,7 +476,7 @@ public class FTPFileSystem extends FileSystem {
     String group = ftpFile.getGroup();
     Path filePath = new Path(parentPath, ftpFile.getName());
     return new FileStatus(length, isDir, blockReplication, blockSize, modTime,
-        accessTime, permission, user, group, filePath.makeQualified(this));
+        accessTime, permission, user, group, filePath.makeQualified(this), "FTP");
   }
 
   @Override

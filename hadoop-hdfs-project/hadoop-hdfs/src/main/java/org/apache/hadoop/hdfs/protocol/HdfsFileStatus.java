@@ -266,6 +266,6 @@ public class HdfsFileStatus {
         getPermission(), getOwner(), getGroup(),
         isSymlink() ? new Path(getSymlink()) : null,
         (getFullPath(path)).makeQualified(
-            defaultUri, null)); // fully-qualify path
+            defaultUri, null), "hdfsfilesystem"); // fully-qualify path
   }
 }

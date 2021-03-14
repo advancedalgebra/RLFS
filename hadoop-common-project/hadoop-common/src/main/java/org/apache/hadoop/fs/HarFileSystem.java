@@ -562,7 +562,7 @@ public class HarFileSystem extends FileSystem {
         underlying.getPermission(),
         underlying.getOwner(),
         underlying.getGroup(),
-        makeRelative(this.uri.getPath(), new Path(h.name)));
+        makeRelative(this.uri.getPath(), new Path(h.name)), underlying.getTag());
   }
 
   // a single line parser for hadoop archives status 

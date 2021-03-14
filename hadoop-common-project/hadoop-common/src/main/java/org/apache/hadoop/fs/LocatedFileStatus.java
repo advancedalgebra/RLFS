@@ -72,7 +72,7 @@ public class LocatedFileStatus extends FileStatus {
           Path path,
           BlockLocation[] locations) {
 	  super(length, isdir, block_replication, blocksize, modification_time,
-			  access_time, permission, owner, group, symlink, path);
+			  access_time, permission, owner, group, symlink, path, "located");
 	  this.locations = locations;
   }
   

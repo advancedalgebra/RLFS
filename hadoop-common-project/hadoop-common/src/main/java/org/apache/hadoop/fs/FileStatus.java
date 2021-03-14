@@ -44,27 +44,37 @@ public class FileStatus implements Writable, Comparable {
   private String owner;
   private String group;
   private Path symlink;
+  private String tag;
   
-  public FileStatus() { this(0, false, 0, 0, 0, 0, null, null, null, null); }
+  public FileStatus() { this(0, false, 0, 0, 0, 0, null, null, null, null, "math"); }
   
   //We should deprecate this soon?
   public FileStatus(long length, boolean isdir, int block_replication,
                     long blocksize, long modification_time, Path path) {
 
     this(length, isdir, block_replication, blocksize, modification_time,
-         0, null, null, null, path);
+         0, null, null, null, path, "math");
   }
 
   /**
    * Constructor for file systems on which symbolic links are not supported
    */
+//  public FileStatus(long length, boolean isdir,
+//                    int block_replication,
+//                    long blocksize, long modification_time, long access_time,
+//                    FsPermission permission, String owner, String group,
+//                    Path path) {
+//    this(length, isdir, block_replication, blocksize, modification_time,
+//         access_time, permission, owner, group, null, path, "math");
+//  }
+
   public FileStatus(long length, boolean isdir,
                     int block_replication,
                     long blocksize, long modification_time, long access_time,
-                    FsPermission permission, String owner, String group, 
-                    Path path) {
+                    FsPermission permission, String owner, String group,
+                    Path path, String tag) {
     this(length, isdir, block_replication, blocksize, modification_time,
-         access_time, permission, owner, group, null, path);
+            access_time, permission, owner, group, null, path, tag);
   }
 
   public FileStatus(long length, boolean isdir,
@@ -72,7 +82,7 @@ public class FileStatus implements Writable, Comparable {
                     long blocksize, long modification_time, long access_time,
                     FsPermission permission, String owner, String group, 
                     Path symlink,
-                    Path path) {
+                    Path path, String tag) {
     this.length = length;
     this.isdir = isdir;
     this.block_replication = (short)block_replication;
@@ -90,6 +100,7 @@ public class FileStatus implements Writable, Comparable {
     }
     this.owner = (owner == null) ? "" : owner;
     this.group = (group == null) ? "" : group;
+    this.tag = (tag == null) ? "" : tag;
     this.symlink = symlink;
     this.path = path;
     // The variables isdir and symlink indicate the type:
@@ -111,7 +122,7 @@ public class FileStatus implements Writable, Comparable {
       other.getBlockSize(), other.getModificationTime(), other.getAccessTime(),
       other.getPermission(), other.getOwner(), other.getGroup(),
       (other.isSymlink() ? other.getSymlink() : null),
-      other.getPath());
+      other.getPath(), other.getTag());
   }
 
   /**
@@ -219,6 +230,10 @@ public class FileStatus implements Writable, Comparable {
   public String getOwner() {
     return owner;
   }
+
+  public String getTag() {
+    return tag;
+  }
   
   /**
    * Get the group associated with the file.
@@ -257,6 +272,10 @@ public class FileStatus implements Writable, Comparable {
    */  
   protected void setOwner(String owner) {
     this.owner = (owner == null) ? "" : owner;
+  }
+
+  protected void setTag(String tag) {
+    this.tag = (tag == null) ? "" : tag;
   }
   
   /**
@@ -314,6 +333,7 @@ public class FileStatus implements Writable, Comparable {
     access_time = in.readLong();
     permission.readFields(in);
     owner = Text.readString(in, Text.DEFAULT_MAX_LEN);
+    tag = Text.readString(in, Text.DEFAULT_MAX_LEN);
     group = Text.readString(in, Text.DEFAULT_MAX_LEN);
     if (in.readBoolean()) {
       this.symlink = new Path(Text.readString(in, Text.DEFAULT_MAX_LEN));
@@ -383,6 +403,7 @@ public class FileStatus implements Writable, Comparable {
     sb.append("; modification_time=" + modification_time);
     sb.append("; access_time=" + access_time);
     sb.append("; owner=" + owner);
+    sb.append("; tag=" + tag);
     sb.append("; group=" + group);
     sb.append("; permission=" + permission);
     sb.append("; isSymlink=" + isSymlink());

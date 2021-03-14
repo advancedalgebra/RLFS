@@ -353,7 +353,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
       status = new FileStatus(stat.getLen(), stat.isDir(),
           stat.getReplication(), stat.getBlockSize(), stat.getModificationTime(),
           stat.getAccessTime(), stat.getPermission(), stat.getOwner(),
-          stat.getGroup(), symlink, path);
+          stat.getGroup(), symlink, path, "FsNamesystem");
     }
     for (AuditLogger logger : auditLoggers) {
       if (logger instanceof HdfsAuditLogger) {

@@ -780,7 +780,7 @@ public class ViewFileSystem extends FileSystem {
           PERMISSION_555, ugi.getUserName(), ugi.getGroupNames()[0],
 
           new Path(theInternalDir.fullPath).makeQualified(
-              myUri, ROOT_PATH));
+              myUri, ROOT_PATH), "viewfilesystem");
     }
     
 
@@ -801,13 +801,13 @@ public class ViewFileSystem extends FileSystem {
             ugi.getUserName(), ugi.getGroupNames()[0],
             link.getTargetLink(),
             new Path(inode.fullPath).makeQualified(
-                myUri, null));
+                myUri, null), "viewfilesystem");
         } else {
           result[i++] = new FileStatus(0, true, 0, 0,
             creationTime, creationTime, PERMISSION_555,
             ugi.getUserName(), ugi.getGroupNames()[0],
             new Path(inode.fullPath).makeQualified(
-                myUri, null));
+                myUri, null), "viewfilesystem");
         }
       }
       return result;

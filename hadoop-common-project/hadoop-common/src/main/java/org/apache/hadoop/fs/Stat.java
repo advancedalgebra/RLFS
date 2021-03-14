@@ -164,7 +164,7 @@ public class Stat extends Shell {
       }
       // Set stat
       stat = new FileStatus(length, isDir, 1, blockSize, modTime, accessTime,
-          perms, owner, group, symlink, qualified);
+          perms, owner, group, symlink, qualified, "Stat");
     } catch (NumberFormatException e) {
       throw new IOException("Unexpected stat output: " + line, e);
     } catch (NoSuchElementException e) {

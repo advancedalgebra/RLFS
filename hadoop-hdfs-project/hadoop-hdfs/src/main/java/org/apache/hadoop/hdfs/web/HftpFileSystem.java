@@ -443,12 +443,12 @@ public class HftpFileSystem extends FileSystem
               modif, atime, FsPermission.valueOf(attrs.getValue("permission")),
               attrs.getValue("owner"), attrs.getValue("group"),
               HftpFileSystem.this.makeQualified(
-                  new Path(getUri().toString(), attrs.getValue("path"))))
+                  new Path(getUri().toString(), attrs.getValue("path"))), "hftpfilesystem")
         : new FileStatus(0L, true, 0, 0L,
               modif, atime, FsPermission.valueOf(attrs.getValue("permission")),
               attrs.getValue("owner"), attrs.getValue("group"),
               HftpFileSystem.this.makeQualified(
-                  new Path(getUri().toString(), attrs.getValue("path"))));
+                  new Path(getUri().toString(), attrs.getValue("path"))), "hftpfilesystem");
       fslist.add(fs);
     }
 

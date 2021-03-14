@@ -56,9 +56,9 @@ public class TestFileStatus {
   @Test
   public void testFileStatusWritable() throws Exception {
     FileStatus[] tests = {
-        new FileStatus(1,false,5,3,4,5,null,"","",new Path("/a/b")),
+        new FileStatus(1,false,5,3,4,5,null,"","",new Path("/a/b"), "testfilestatus"),
         new FileStatus(0,false,1,2,3,new Path("/")),
-        new FileStatus(1,false,5,3,4,5,null,"","",new Path("/a/b"))
+        new FileStatus(1,false,5,3,4,5,null,"","",new Path("/a/b"), "testfilestatus")
       };
 
     LOG.info("Writing FileStatuses to a ByteArrayOutputStream");
@@ -93,7 +93,7 @@ public class TestFileStatus {
     boolean isdir = false;
     Path symlink = new Path("symlink");
     FileStatus fileStatus = new FileStatus(LENGTH, isdir, REPLICATION, BLKSIZE,
-        MTIME, ATIME, PERMISSION, OWNER, GROUP, symlink, PATH);
+        MTIME, ATIME, PERMISSION, OWNER, GROUP, symlink, PATH, "testfilestatus");
     
     validateAccessors(fileStatus, LENGTH, isdir, REPLICATION, BLKSIZE, MTIME,
       ATIME, PERMISSION, OWNER, GROUP, symlink, PATH);
@@ -106,7 +106,7 @@ public class TestFileStatus {
   public void constructorNoSymlink() throws IOException {
     boolean isdir = true;  
     FileStatus fileStatus = new FileStatus(LENGTH, isdir, REPLICATION, BLKSIZE,
-        MTIME, ATIME, PERMISSION, OWNER, GROUP, PATH);
+        MTIME, ATIME, PERMISSION, OWNER, GROUP, PATH, "testfilestatus");
     validateAccessors(fileStatus, LENGTH, isdir, REPLICATION, BLKSIZE, MTIME,
         ATIME, PERMISSION, OWNER, GROUP, null, PATH);
   }
@@ -141,9 +141,9 @@ public class TestFileStatus {
   public void testEquals() {
     Path path = new Path("path");
     FileStatus fileStatus1 = new FileStatus(1, true, 1, 1, 1, 1,
-        FsPermission.valueOf("-rw-rw-rw-"), "one", "one", null, path);
+        FsPermission.valueOf("-rw-rw-rw-"), "one", "one", null, path, "testfilestatus");
     FileStatus fileStatus2 = new FileStatus(2, true, 2, 2, 2, 2,
-        FsPermission.valueOf("---x--x--x"), "two", "two", null, path);
+        FsPermission.valueOf("---x--x--x"), "two", "two", null, path, "testfilestatus");
     assertEquals(fileStatus1, fileStatus2);
   }
 
@@ -155,9 +155,9 @@ public class TestFileStatus {
     Path path1 = new Path("path1");
     Path path2 = new Path("path2");
     FileStatus fileStatus1 = new FileStatus(1, true, 1, 1, 1, 1,
-        FsPermission.valueOf("-rw-rw-rw-"), "one", "one", null, path1);
+        FsPermission.valueOf("-rw-rw-rw-"), "one", "one", null, path1, "testfilestatus");
     FileStatus fileStatus2 = new FileStatus(1, true, 1, 1, 1, 1,
-        FsPermission.valueOf("-rw-rw-rw-"), "one", "one", null, path2);
+        FsPermission.valueOf("-rw-rw-rw-"), "one", "one", null, path2, "testfilestatus");
     assertFalse(fileStatus1.equals(fileStatus2));
     assertFalse(fileStatus2.equals(fileStatus1));
   }
@@ -169,7 +169,7 @@ public class TestFileStatus {
   public void toStringFile() throws IOException {
     boolean isdir = false; 
     FileStatus fileStatus = new FileStatus(LENGTH, isdir, REPLICATION, BLKSIZE,
-        MTIME, ATIME, PERMISSION, OWNER, GROUP, null, PATH);   
+        MTIME, ATIME, PERMISSION, OWNER, GROUP, null, PATH, "testfilestatus");
     validateToString(fileStatus);
   }
   
@@ -179,7 +179,7 @@ public class TestFileStatus {
   @Test
   public void toStringDir() throws IOException {
     FileStatus fileStatus = new FileStatus(LENGTH, true, REPLICATION, BLKSIZE,
-        MTIME, ATIME, PERMISSION, OWNER, GROUP, null, PATH); 
+        MTIME, ATIME, PERMISSION, OWNER, GROUP, null, PATH, "testfilestatus");
     validateToString(fileStatus);
   }
   
@@ -191,7 +191,7 @@ public class TestFileStatus {
     boolean isdir = false;
     Path symlink = new Path("symlink");
     FileStatus fileStatus = new FileStatus(LENGTH, isdir, REPLICATION, BLKSIZE,
-        MTIME, ATIME, PERMISSION, OWNER, GROUP, symlink, PATH);  
+        MTIME, ATIME, PERMISSION, OWNER, GROUP, symlink, PATH, "testfilestatus");
     validateToString(fileStatus);
   }
   

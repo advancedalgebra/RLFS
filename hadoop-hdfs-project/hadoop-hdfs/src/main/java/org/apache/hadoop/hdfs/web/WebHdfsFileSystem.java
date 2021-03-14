@@ -863,7 +863,7 @@ public class WebHdfsFileSystem extends FileSystem
         f.getBlockSize(), f.getModificationTime(), f.getAccessTime(),
         f.getPermission(), f.getOwner(), f.getGroup(),
         f.isSymlink() ? new Path(f.getSymlink()) : null,
-        f.getFullPath(parent).makeQualified(getUri(), getWorkingDirectory()));
+        f.getFullPath(parent).makeQualified(getUri(), getWorkingDirectory()),"webhdfsfilesystem");
   }
 
   @Override
