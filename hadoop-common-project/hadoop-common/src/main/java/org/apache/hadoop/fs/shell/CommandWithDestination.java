@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 
+import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.CreateFlag;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -61,6 +62,7 @@ abstract class CommandWithDestination extends FsCommand {
   private boolean verifyChecksum = true;
   private boolean writeChecksum = true;
   private boolean lazyPersist = false;
+  private String haveTag = null;
   
   /**
    * The name of the raw xattr namespace. It would be nice to use
@@ -85,6 +87,15 @@ abstract class CommandWithDestination extends FsCommand {
   
   protected void setLazyPersist(boolean flag) {
     lazyPersist = flag;
+  }
+
+  protected void setHaveTag(String tag) {
+    haveTag = tag;
+    preserve(FileAttribute.TAG);
+  }
+
+  protected String getHaveTag() {
+    return haveTag;
   }
 
   protected void setVerifyChecksum(boolean flag) {
@@ -112,7 +123,7 @@ abstract class CommandWithDestination extends FsCommand {
   }
   
   protected static enum FileAttribute {
-    TIMESTAMPS, OWNERSHIP, PERMISSION, ACL, XATTR;
+    TIMESTAMPS, OWNERSHIP, PERMISSION, ACL, TAG, XATTR;
 
     public static FileAttribute getAttribute(char symbol) {
       for (FileAttribute attribute : values()) {
@@ -413,12 +424,18 @@ abstract class CommandWithDestination extends FsCommand {
           src.stat.getModificationTime(),
           src.stat.getAccessTime());
     }
+    if (shouldPreserve(FileAttribute.TAG)) {
+      target.fs.setTag(
+              target.path,
+              src.stat.getTag());
+    }
     if (shouldPreserve(FileAttribute.OWNERSHIP)) {
       target.fs.setOwner(
           target.path,
           src.stat.getOwner(),
           src.stat.getGroup());
     }
+
     if (shouldPreserve(FileAttribute.PERMISSION) ||
         shouldPreserve(FileAttribute.ACL)) {
       target.fs.setPermission(

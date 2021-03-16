@@ -899,6 +899,14 @@ public class FileUtil {
     execCommand(file, cmd);
   }
 
+  public static void setTag(File file, String tag) throws IOException {
+    if (tag == null) {
+      throw new IOException("tag == null");
+    }
+    String [] cmd = new String[] {"setfattr", "-n", "user.tag", "-v", tag};
+    execCommand(file, cmd);
+  }
+
   /**
    * Platform independent implementation for {@link File#setReadable(boolean)}
    * File#setReadable does not work as expected on Windows.

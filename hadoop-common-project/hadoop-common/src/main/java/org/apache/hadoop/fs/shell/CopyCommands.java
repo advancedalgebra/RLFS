@@ -215,7 +215,7 @@ class CopyCommands {
    */
   public static class Put extends CommandWithDestination {
     public static final String NAME = "put";
-    public static final String USAGE = "[-f] [-p] [-l] <localsrc> ... <dst>";
+    public static final String USAGE = "[-f] [-p] [-l] [-t] <localsrc> ... <dst>";
     public static final String DESCRIPTION =
       "Copy files from the local file system " +
       "into fs. Copying fails if the file already " +
@@ -229,11 +229,17 @@ class CopyCommands {
 
     @Override
     protected void processOptions(LinkedList<String> args) throws IOException {
-      CommandFormat cf = new CommandFormat(1, Integer.MAX_VALUE, "f", "p", "l");
+      CommandFormat cf = new CommandFormat(1, Integer.MAX_VALUE, "f", "p", "l", "t");
       cf.parse(args);
       setOverwrite(cf.getOpt("f"));
       setPreserve(cf.getOpt("p"));
       setLazyPersist(cf.getOpt("l"));
+      if (cf.getOpt("t")) {
+        setHaveTag(args.get(1));
+        args.remove(1);
+      } else {
+        setHaveTag("default");
+      }
       getRemoteDestination(args);
       // should have a -r option
       setRecursive(true);
@@ -244,7 +250,9 @@ class CopyCommands {
     protected List<PathData> expandArgument(String arg) throws IOException {
       List<PathData> items = new LinkedList<PathData>();
       try {
-        items.add(new PathData(new URI(arg), getConf()));
+        PathData pathData = new PathData(new URI(arg), getConf());
+        pathData.stat.setTag(this.getHaveTag());
+        items.add(pathData);
       } catch (URISyntaxException e) {
         if (Path.WINDOWS) {
           // Unlike URI, PathData knows how to parse Windows drive-letter paths.

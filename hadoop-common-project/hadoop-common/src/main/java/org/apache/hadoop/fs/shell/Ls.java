@@ -131,7 +131,7 @@ class Ls extends FsCommand {
       maxLen   = maxLength(maxLen, stat.getLen());
       maxOwner = maxLength(maxOwner, stat.getOwner());
       maxGroup = maxLength(maxGroup, stat.getGroup());
-      maxTag = maxLength(maxTag, stat.getTag());
+      maxTag = maxLength(maxTag, stat.loadTags());
     }
 
     StringBuilder fmt = new StringBuilder();

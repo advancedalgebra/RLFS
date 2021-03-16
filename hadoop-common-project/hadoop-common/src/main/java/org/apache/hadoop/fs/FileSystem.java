@@ -1654,6 +1654,10 @@ public abstract class FileSystem extends Configured implements Closeable {
   public FileStatus[] globStatus(Path pathPattern) throws IOException {
     return new Globber(this, pathPattern, DEFAULT_FILTER).glob();
   }
+
+//  public FileStatus[] globStatus(Path pathPattern, String tag) throws IOException {
+//    return new Globber(this, pathPattern, DEFAULT_FILTER).glob();
+//  }
   
   /**
    * Return an array of FileStatus objects whose path names match pathPattern
@@ -2361,6 +2365,10 @@ public abstract class FileSystem extends Configured implements Closeable {
    */
   public void setTimes(Path p, long mtime, long atime
       ) throws IOException {
+  }
+
+  public void setTag(Path p, String tag
+  ) throws IOException {
   }
 
   /**

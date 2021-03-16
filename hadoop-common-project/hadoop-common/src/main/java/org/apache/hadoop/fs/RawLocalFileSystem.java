@@ -616,8 +616,8 @@ public class RawLocalFileSystem extends FileSystem {
     private boolean isPermissionLoaded() {
       return !super.getOwner().isEmpty(); 
     }
-    
-    DeprecatedRawLocalFileStatus(File f, long defaultBlockSize, FileSystem fs) {
+
+    DeprecatedRawLocalFileStatus( File f, long defaultBlockSize, FileSystem fs) {
       super(f.length(), f.isDirectory(), 1, defaultBlockSize,
           f.lastModified(), new Path(f.getPath()).makeQualified(fs.getUri(),
             fs.getWorkingDirectory()));
@@ -639,6 +639,18 @@ public class RawLocalFileSystem extends FileSystem {
       return super.getOwner();
     }
 
+//    public String loadTags() {
+//      if (!isPermissionLoaded()) {
+//        loadTag();
+//      }
+//      return super.loadTags();
+//    }
+
+    public String loadTags() {
+      loadTag();
+      return super.loadTags();
+    }
+
     @Override
     public String getGroup() {
       if (!isPermissionLoaded()) {
@@ -651,7 +663,7 @@ public class RawLocalFileSystem extends FileSystem {
     private void loadPermissionInfo() {
       IOException e = null;
       try {
-        String output = FileUtil.execCommand(new File(getPath().toUri()), 
+        String output = FileUtil.execCommand(new File(getPath().toUri()),
             Shell.getGetPermissionCommand());
         StringTokenizer t =
             new StringTokenizer(output, Shell.TOKEN_SEPARATOR_REGEX);
@@ -696,6 +708,28 @@ public class RawLocalFileSystem extends FileSystem {
       }
     }
 
+    private void loadTag() {
+      IOException e = null;
+      String [] cmd = new String[] {"getfattr", "-n", "user.tag"};
+      try {
+        String output = FileUtil.execCommand(new File(getPath().toUri()), cmd);
+        setTag(output.split("\n")[1].split("\"")[1]);
+      } catch (Shell.ExitCodeException ioe) {
+        if (ioe.getExitCode() != 1) {
+          e = ioe;
+        } else {
+          setTag(null);
+        }
+      } catch (IOException ioe) {
+        e = ioe;
+      } finally {
+        if (e != null) {
+          throw new RuntimeException("Error while running command to get " +
+                  "file tag : " + StringUtils.stringifyException(e));
+        }
+      }
+    }
+
     @Override
     public void write(DataOutput out) throws IOException {
       if (!isPermissionLoaded()) {
@@ -712,6 +746,10 @@ public class RawLocalFileSystem extends FileSystem {
   public void setOwner(Path p, String username, String groupname)
     throws IOException {
     FileUtil.setOwner(pathToFile(p), username, groupname);
+  }
+
+  public void setTag(Path p, String tag) throws IOException {
+    FileUtil.setTag(pathToFile(p), tag);
   }
 
   /**

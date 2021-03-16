@@ -53,8 +53,15 @@ public class FileStatus implements Writable, Comparable {
                     long blocksize, long modification_time, Path path) {
 
     this(length, isdir, block_replication, blocksize, modification_time,
-         0, null, null, null, path, "math");
+         0, null, null, null, path, "default");
   }
+
+//  public FileStatus(long length, boolean isdir, int block_replication,
+//                    long blocksize, long modification_time, Path path, String tag) {
+//
+//    this(length, isdir, block_replication, blocksize, modification_time,
+//            0, null, null, null, path, tag);
+//  }
 
   /**
    * Constructor for file systems on which symbolic links are not supported
@@ -231,10 +238,14 @@ public class FileStatus implements Writable, Comparable {
     return owner;
   }
 
+  public String loadTags() {
+    return tag;
+  }
+
   public String getTag() {
     return tag;
   }
-  
+
   /**
    * Get the group associated with the file.
    * @return group for the file. The string could be empty if there is no
@@ -274,8 +285,8 @@ public class FileStatus implements Writable, Comparable {
     this.owner = (owner == null) ? "" : owner;
   }
 
-  protected void setTag(String tag) {
-    this.tag = (tag == null) ? "" : tag;
+  public void setTag(String tag) {
+    this.tag = (tag == null) ? "default" : tag;
   }
   
   /**

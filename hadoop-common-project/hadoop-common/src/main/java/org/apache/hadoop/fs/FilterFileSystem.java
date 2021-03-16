@@ -496,6 +496,10 @@ public class FilterFileSystem extends FileSystem {
     fs.setTimes(p, mtime, atime);
   }
 
+  public void setTag(Path p, String tag) throws IOException {
+    fs.setTag(p, tag);
+  }
+
   @Override
   public void setPermission(Path p, FsPermission permission
       ) throws IOException {
