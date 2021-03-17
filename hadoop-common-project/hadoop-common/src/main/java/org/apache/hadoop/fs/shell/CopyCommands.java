@@ -235,8 +235,8 @@ class CopyCommands {
       setPreserve(cf.getOpt("p"));
       setLazyPersist(cf.getOpt("l"));
       if (cf.getOpt("t")) {
-        setHaveTag(args.get(1));
-        args.remove(1);
+        setHaveTag(args.get(args.size()-2));
+        args.remove(args.size()-2);
       } else {
         setHaveTag("default");
       }
@@ -250,9 +250,10 @@ class CopyCommands {
     protected List<PathData> expandArgument(String arg) throws IOException {
       List<PathData> items = new LinkedList<PathData>();
       try {
-        PathData pathData = new PathData(new URI(arg), getConf());
-        pathData.stat.setTag(this.getHaveTag());
-        items.add(pathData);
+//        PathData pathData = new PathData(new URI(arg), getConf());
+//        pathData.stat.setTag(this.getHaveTag());
+//        items.add(pathData);
+        items.add(new PathData(new URI(arg), getConf()));
       } catch (URISyntaxException e) {
         if (Path.WINDOWS) {
           // Unlike URI, PathData knows how to parse Windows drive-letter paths.

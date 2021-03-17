@@ -91,7 +91,6 @@ abstract class CommandWithDestination extends FsCommand {
 
   protected void setHaveTag(String tag) {
     haveTag = tag;
-    preserve(FileAttribute.TAG);
   }
 
   protected String getHaveTag() {
@@ -123,7 +122,7 @@ abstract class CommandWithDestination extends FsCommand {
   }
   
   protected static enum FileAttribute {
-    TIMESTAMPS, OWNERSHIP, PERMISSION, ACL, TAG, XATTR;
+    TIMESTAMPS, OWNERSHIP, PERMISSION, ACL, XATTR;
 
     public static FileAttribute getAttribute(char symbol) {
       for (FileAttribute attribute : values()) {
@@ -338,6 +337,7 @@ abstract class CommandWithDestination extends FsCommand {
       in = src.fs.open(src.path);
       copyStreamToTarget(in, target);
       preserveAttributes(src, target, preserveRawXattrs);
+      target.fs.setTag(target.path, this.haveTag);
     } finally {
       IOUtils.closeStream(in);
     }
@@ -424,18 +424,12 @@ abstract class CommandWithDestination extends FsCommand {
           src.stat.getModificationTime(),
           src.stat.getAccessTime());
     }
-    if (shouldPreserve(FileAttribute.TAG)) {
-      target.fs.setTag(
-              target.path,
-              src.stat.getTag());
-    }
     if (shouldPreserve(FileAttribute.OWNERSHIP)) {
       target.fs.setOwner(
           target.path,
           src.stat.getOwner(),
           src.stat.getGroup());
     }
-
     if (shouldPreserve(FileAttribute.PERMISSION) ||
         shouldPreserve(FileAttribute.ACL)) {
       target.fs.setPermission(
