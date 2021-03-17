@@ -41,6 +41,7 @@ import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.permission.FsPermission;
+import org.apache.hadoop.fs.shell.PathData;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.nativeio.NativeIO;
 import org.apache.hadoop.io.nativeio.NativeIOException;
@@ -458,7 +459,7 @@ public class RawLocalFileSystem extends FileSystem {
     }
     return Arrays.copyOf(results, j);
   }
-  
+
   protected boolean mkOneDir(File p2f) throws IOException {
     return mkOneDirWithMode(new Path(p2f.getAbsolutePath()), p2f, null);
   }

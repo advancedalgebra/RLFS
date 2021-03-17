@@ -522,7 +522,6 @@ public abstract class ChecksumFileSystem extends FilterFileSystem {
         // no src checksum, so remove dst checksum
         value = fs.delete(dstCheckFile, true); 
       }
-
       return value;
     }
   }

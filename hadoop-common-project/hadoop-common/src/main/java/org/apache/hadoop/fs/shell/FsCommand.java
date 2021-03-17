@@ -57,6 +57,7 @@ abstract public class FsCommand extends Command {
     factory.registerCommands(MoveCommands.class);
     factory.registerCommands(SetReplication.class);
     factory.registerCommands(Stat.class);
+    factory.registerCommands(Tag.class);
     factory.registerCommands(Tail.class);
     factory.registerCommands(Test.class);
     factory.registerCommands(Touch.class);
