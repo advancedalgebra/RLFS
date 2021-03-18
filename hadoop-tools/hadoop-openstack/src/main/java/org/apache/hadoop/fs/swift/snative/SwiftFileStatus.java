@@ -47,7 +47,7 @@ public class SwiftFileStatus extends FileStatus {
                          FsPermission permission,
                          String owner, String group, Path path) {
     super(length, isdir, block_replication, blocksize, modification_time,
-            access_time, permission, owner, group, path);
+            access_time, permission, owner, group, path, "SwiftFileStatus");
   }
 
   //HDFS2+ only
@@ -61,7 +61,7 @@ public class SwiftFileStatus extends FileStatus {
                          FsPermission permission,
                          String owner, String group, Path symlink, Path path) {
     super(length, isdir, block_replication, blocksize, modification_time,
-          access_time, permission, owner, group, symlink, path);
+          access_time, permission, owner, group, symlink, path, "SwiftFileStatus");
   }
 
   /**

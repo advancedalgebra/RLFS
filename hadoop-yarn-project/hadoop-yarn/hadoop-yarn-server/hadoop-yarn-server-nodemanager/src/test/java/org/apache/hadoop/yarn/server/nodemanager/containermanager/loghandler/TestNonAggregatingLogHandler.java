@@ -142,7 +142,7 @@ public class TestNonAggregatingLogHandler {
     final FileStatus fs =
         new FileStatus(0, true, 1, 0, System.currentTimeMillis(), 0,
           defaultPermission, "", "",
-          new Path(localLogDirs[0].getAbsolutePath()));
+          new Path(localLogDirs[0].getAbsolutePath()), "TestNonAggregatingLogHandler");
     doReturn(fs).when(spylfs).getFileStatus(isA(Path.class));
 
     logHandler.init(conf);
@@ -440,7 +440,7 @@ public class TestNonAggregatingLogHandler {
     final FileStatus fs =
         new FileStatus(0, true, 1, 0, System.currentTimeMillis(), 0,
           defaultPermission, "", "",
-          new Path(localLogDirs[0].getAbsolutePath()));
+          new Path(localLogDirs[0].getAbsolutePath()),"TestNonAggregatingLogHandler");
     doReturn(fs).when(spylfs).getFileStatus(isA(Path.class));
     doReturn(localLogDirPaths).when(dirsHandler).getLogDirsForCleanup();
 

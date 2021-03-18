@@ -55,7 +55,7 @@ public class TestJsonUtil {
         f.getBlockSize(), f.getModificationTime(), f.getAccessTime(),
         f.getPermission(), f.getOwner(), f.getGroup(),
         f.isSymlink() ? new Path(f.getSymlink()) : null,
-        new Path(f.getFullName(parent)));
+        new Path(f.getFullName(parent)), "testjsonutil");
   }
 
   @Test

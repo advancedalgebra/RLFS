@@ -976,14 +976,14 @@ public class HttpFSFileSystem extends FileSystem
       case DIRECTORY:
         fileStatus = new FileStatus(len, (type == FILE_TYPE.DIRECTORY),
                                     replication, blockSize, mTime, aTime,
-                                    permission, owner, group, path);
+                                    permission, owner, group, path, "httpfs");
         break;
       case SYMLINK:
         Path symLink = null;
         fileStatus = new FileStatus(len, false,
                                     replication, blockSize, mTime, aTime,
                                     permission, owner, group, symLink,
-                                    path);
+                                    path, "httpfs");
     }
     return fileStatus;
   }

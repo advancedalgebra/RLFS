@@ -1763,7 +1763,7 @@ public class NativeAzureFileSystem extends FileSystem {
         meta.getPermissionStatus().getPermission(),
         meta.getPermissionStatus().getUserName(),
         meta.getPermissionStatus().getGroupName(),
-        path.makeQualified(getUri(), getWorkingDirectory()));
+        path.makeQualified(getUri(), getWorkingDirectory()), "NativeAzureFileSystem");
   }
 
   private FileStatus newDirectory(FileMetadata meta, Path path) {
@@ -1777,7 +1777,7 @@ public class NativeAzureFileSystem extends FileSystem {
         meta == null ? FsPermission.getDefault() : meta.getPermissionStatus().getPermission(),
         meta == null ? "" : meta.getPermissionStatus().getUserName(),
         meta == null ? "" : meta.getPermissionStatus().getGroupName(),
-        path.makeQualified(getUri(), getWorkingDirectory()));
+        path.makeQualified(getUri(), getWorkingDirectory()), "NativeAzureFileSystem");
   }
 
   private static enum UMaskApplyMode {

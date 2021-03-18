@@ -851,10 +851,10 @@ public class TestResourceLocalizationService {
           ResourceLocalizationService.NM_PRIVATE_DIR);
     final FileStatus fs =
         new FileStatus(0, true, 1, 0, System.currentTimeMillis(), 0,
-          defaultPermission, "", "", new Path(sDirs[0]));
+          defaultPermission, "", "", new Path(sDirs[0]), "TestResourceLocalizationService");
     final FileStatus nmFs =
         new FileStatus(0, true, 1, 0, System.currentTimeMillis(), 0,
-          nmPermission, "", "", sysDir);
+          nmPermission, "", "", sysDir, "TestResourceLocalizationService");
 
     doAnswer(new Answer<FileStatus>() {
       @Override
@@ -2108,10 +2108,10 @@ public class TestResourceLocalizationService {
         ResourceLocalizationService.NM_PRIVATE_PERM.applyUMask(lfs.getUMask());
     final FileStatus fs =
         new FileStatus(0, true, 1, 0, System.currentTimeMillis(), 0,
-          defaultPermission, "", "", localDirs.get(0));
+          defaultPermission, "", "", localDirs.get(0), "TestResourceLocalizationService");
     final FileStatus nmFs =
         new FileStatus(0, true, 1, 0, System.currentTimeMillis(), 0,
-          nmPermission, "", "", localDirs.get(0));
+          nmPermission, "", "", localDirs.get(0), "TestResourceLocalizationService");
 
     final String user = "user0";
     // init application

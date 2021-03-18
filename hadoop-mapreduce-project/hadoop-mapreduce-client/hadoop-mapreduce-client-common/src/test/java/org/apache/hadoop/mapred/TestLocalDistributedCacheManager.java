@@ -141,7 +141,7 @@ public class TestLocalDistributedCacheManager {
         Path p = (Path)args.getArguments()[0];
         if("file.txt".equals(p.getName())) {
          return new FileStatus(201, false, 1, 500, 101, 101, 
-             FsPermission.getDefault(), "me", "me", filePath);
+             FsPermission.getDefault(), "me", "me", filePath, "TestLocalDistributedCacheManager");
         }  else {
           throw new FileNotFoundException(p+" not supported by mocking");
         }
@@ -248,7 +248,7 @@ public class TestLocalDistributedCacheManager {
         Path p = (Path)args.getArguments()[0];
         if("file.txt".equals(p.getName())) {
          return new FileStatus(201, false, 1, 500, 101, 101, 
-             FsPermission.getDefault(), "me", "me", filePath);
+             FsPermission.getDefault(), "me", "me", filePath, "TestLocalDistributedCacheManager");
         }  else {
           throw new FileNotFoundException(p+" not supported by mocking");
         }
