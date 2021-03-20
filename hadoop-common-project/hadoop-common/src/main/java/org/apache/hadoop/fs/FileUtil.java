@@ -1102,6 +1102,10 @@ public class FileUtil {
     String[] args = new String[cmd.length + 1];
     System.arraycopy(cmd, 0, args, 0, cmd.length);
     args[cmd.length] = f.getCanonicalPath();
+//    if (args.length >= 6) {
+//      System.out.println(args[4]);
+//      System.out.println(args[5]);
+//    }
     String output = Shell.execCommand(args);
     return output;
   }

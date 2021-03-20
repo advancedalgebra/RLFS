@@ -28,8 +28,12 @@ public class Tag extends FsCommand{
         CommandFormat cf = new CommandFormat(0, Integer.MAX_VALUE, "R");
         cf.parse(args);
         setRecursive(cf.getOpt("R") && dirRecurse);
-        tag = args.getLast();
-        args.removeLast();
+        if (args.size() == 0) {
+            tag = "default";
+        } else {
+            tag = args.getLast();
+            args.removeLast();
+        }
         if (args.isEmpty()) args.add(Path.CUR_DIR);
     }
 
@@ -54,6 +58,6 @@ public class Tag extends FsCommand{
 
     @Override
     protected void processPath(PathData item) throws IOException {
-        FileStatus stat = item.stat;
+        item.fs.setTag(item.path, this.tag);
     }
 }
