@@ -17,12 +17,16 @@
  */
 package org.apache.hadoop.fs.shell.TagFind;
 
+import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.GlobPattern;
 import org.apache.hadoop.fs.shell.PathData;
 import org.apache.hadoop.fs.shell.TagFind.*;
+import org.apache.hadoop.util.Shell;
 import org.apache.hadoop.util.StringUtils;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Deque;
 
 /**
@@ -82,15 +86,38 @@ final class Tag extends BaseExpression {
 
   @Override
   public Result apply(PathData item, int depth) throws IOException {
-    String name = getPath(item).getName();
+    String tag = loadTag(item.path.toUri());
     if (!caseSensitive) {
-      name = StringUtils.toLowerCase(name);
+      tag = StringUtils.toLowerCase(tag);
     }
-    if (globPattern.matches(name)) {
+    if (globPattern.matches(tag)) {
       return Result.PASS;
     } else {
       return Result.FAIL;
     }
+  }
+
+  private String loadTag(URI uri) {
+    IOException e = null;
+    String [] cmd = new String[] {"getfattr", "-n", "user.tag"};
+    try {
+      String output = FileUtil.execCommand(new File(uri), cmd);
+      return output.split("\n")[1].split("\"")[1];
+    } catch (Shell.ExitCodeException ioe) {
+      if (ioe.getExitCode() != 1) {
+        e = ioe;
+      } else {
+        return "default";
+      }
+    } catch (IOException ioe) {
+      e = ioe;
+    } finally {
+      if (e != null) {
+        throw new RuntimeException("Error while running command to get " +
+                "file tag : " + StringUtils.stringifyException(e));
+      }
+    }
+    return null;
   }
 
   /** Case insensitive version of the -tag expression. */

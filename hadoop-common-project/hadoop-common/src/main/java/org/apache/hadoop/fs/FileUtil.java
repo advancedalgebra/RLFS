@@ -1098,7 +1098,7 @@ public class FileUtil {
     }
   }
   
-  static String execCommand(File f, String... cmd) throws IOException {
+  public static String execCommand(File f, String... cmd) throws IOException {
     String[] args = new String[cmd.length + 1];
     System.arraycopy(cmd, 0, args, 0, cmd.length);
     args[cmd.length] = f.getCanonicalPath();
