@@ -26,6 +26,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FsShellPermissions;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.shell.find.Find;
+import org.apache.hadoop.fs.shell.TagFind.TagFind;
 
 /**
  * Base class for all "hadoop fs" commands
@@ -58,6 +59,7 @@ abstract public class FsCommand extends Command {
     factory.registerCommands(SetReplication.class);
     factory.registerCommands(Stat.class);
     factory.registerCommands(Tag.class);
+    factory.registerCommands(TagFind.class);
     factory.registerCommands(Tail.class);
     factory.registerCommands(Test.class);
     factory.registerCommands(Touch.class);

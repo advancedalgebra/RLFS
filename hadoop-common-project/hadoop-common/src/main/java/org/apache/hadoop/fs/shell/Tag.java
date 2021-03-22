@@ -12,7 +12,7 @@ public class Tag extends FsCommand{
     }
 
     public static final String NAME = "tag";
-    public static final String USAGE = "[-R] [<path> ...]";
+    public static final String USAGE = "[-R] [<path> ...] [tag]";
     public static final String DESCRIPTION =
             "Set tag for files that match the specified file pattern. If " +
                     "path is not specified, the contents of /user/<currentUser> " +
