@@ -90,6 +90,7 @@ import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.SetQuotaByStorageTypeO
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.SetReplicationOp;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.SetStoragePolicyOp;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.SetXAttrOp;
+import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.SetTagOp;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.SymlinkOp;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.TimesOp;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.TruncateOp;
@@ -1141,6 +1142,15 @@ public class FSEditLog implements LogsPurgeable {
     final SetXAttrOp op = SetXAttrOp.getInstance();
     op.src = src;
     op.xAttrs = xAttrs;
+    logRpcIds(op, toLogRpcIds);
+    logEdit(op);
+  }
+
+  void logSetTag(String src, String tag, boolean toLogRpcIds) {
+    final SetTagOp op = SetTagOp.getInstance();
+    op.src = src;
+    op.tag = tag;
+    org.mortbay.log.Log.info("Op: " + op);
     logRpcIds(op, toLogRpcIds);
     logEdit(op);
   }

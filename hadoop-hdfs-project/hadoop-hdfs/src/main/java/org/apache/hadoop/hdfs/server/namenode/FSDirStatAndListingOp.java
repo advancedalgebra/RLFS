@@ -290,18 +290,17 @@ class FSDirStatAndListingOp {
       FSDirectory fsd, String path, INodesInPath src, boolean isRawPath,
       boolean includeStoragePolicy)
       throws IOException {
-    Log.info("------------------------getFileinfo3---------------------------");
+//    Log.info("------------------------getFileinfo3---------------------------");
     fsd.readLock();
     try {
       final INode i = src.getLastINode();
-      Log.info(String.valueOf(i));
       byte policyId = includeStoragePolicy && i != null && !i.isSymlink() ?
           i.getStoragePolicyID() : BlockStoragePolicySuite.ID_UNSPECIFIED;
       return i == null ? null : createFileStatus(
           fsd, path, HdfsFileStatus.EMPTY_NAME, i, policyId,
           src.getPathSnapshotId(), isRawPath, src);
     } finally {
-      Log.info("------------------------getFileinfo3---------------------------");
+//      Log.info("------------------------getFileinfo3---------------------------");
       fsd.readUnlock();
     }
   }
@@ -394,7 +393,6 @@ class FSDirStatAndListingOp {
 
      final FileEncryptionInfo feInfo = isRawPath ? null :
          fsd.getFileEncryptionInfo(node, snapshot, iip);
-     Log.info("feInfo: " + feInfo);
      if (node.isFile()) {
        Log.info("isfile");
        final INodeFile fileNode = node.asFile();
@@ -403,11 +401,9 @@ class FSDirStatAndListingOp {
        blocksize = fileNode.getPreferredBlockSize();
        isEncrypted = (feInfo != null) ||
            (isRawPath && fsd.isInAnEZ(INodesInPath.fromINode(node)));
-       Log.info("isEncrypted: " + isEncrypted);
      } else {
        Log.info("not a file");
        isEncrypted = fsd.isInAnEZ(INodesInPath.fromINode(node));
-       Log.info("isEncrypted: " + isEncrypted);
      }
 
      int childrenNum = node.isDirectory() ?
@@ -416,12 +412,13 @@ class FSDirStatAndListingOp {
      INodeAttributes nodeAttrs =
          fsd.getAttributes(fullPath, path, node, snapshot);
      Log.info("nodeAttrs: " + nodeAttrs);
-     Log.info("GroupName: " + nodeAttrs.getGroupName());
-    Log.info("UserName: " + nodeAttrs.getUserName());
-    Log.info("AccessTime: " + nodeAttrs.getAccessTime());
-    Log.info("Fspermission: " + nodeAttrs.getFsPermission());
-    Log.info("XAttrFeature: " + nodeAttrs.getXAttrFeature());
+//     Log.info("GroupName: " + nodeAttrs.getGroupName());
+//    Log.info("UserName: " + nodeAttrs.getUserName());
+//    Log.info("AccessTime: " + nodeAttrs.getAccessTime());
+//    Log.info("Fspermission: " + nodeAttrs.getFsPermission());
+//    Log.info("XAttrFeature: " + nodeAttrs.getXAttrFeature());
     Log.info("Size: " + size);
+    Log.info("Tag: " + nodeAttrs.getTag());
     return new HdfsFileStatus(
         size,
         node.isDirectory(),
@@ -437,7 +434,7 @@ class FSDirStatAndListingOp {
         node.getId(),
         childrenNum,
         feInfo,
-        storagePolicy);
+        storagePolicy, nodeAttrs.getTag());
   }
 
   /**

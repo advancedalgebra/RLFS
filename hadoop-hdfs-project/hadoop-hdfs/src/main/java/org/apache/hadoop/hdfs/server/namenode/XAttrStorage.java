@@ -83,6 +83,7 @@ public class XAttrStorage {
       }
       return;
     }
+    Log.info("------------------------------------------------------");
     // Dedupe the xAttr name and save them into a new interned list
     List<XAttr> internedXAttrs = Lists.newArrayListWithCapacity(xAttrs.size());
     for (XAttr xAttr : xAttrs) {
@@ -107,6 +108,7 @@ public class XAttrStorage {
     if (inode.getXAttrFeature() != null) {
       inode.removeXAttrFeature(snapshotId);
     }
+    Log.info("------------------------------------------------------");
     inode.addXAttrFeature(new XAttrFeature(newXAttrs), snapshotId);
   }
 }

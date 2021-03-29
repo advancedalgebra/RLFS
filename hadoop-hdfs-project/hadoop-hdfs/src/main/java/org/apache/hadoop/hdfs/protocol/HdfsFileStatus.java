@@ -46,6 +46,7 @@ public class HdfsFileStatus {
   private final String owner;
   private final String group;
   private final long fileId;
+  private final String tag;
 
   private final FileEncryptionInfo feInfo;
   
@@ -81,9 +82,9 @@ public class HdfsFileStatus {
     this.blocksize = blocksize;
     this.modification_time = modification_time;
     this.access_time = access_time;
-    this.permission = (permission == null) ? 
-        ((isdir || symlink!=null) ? 
-            FsPermission.getDefault() : 
+    this.permission = (permission == null) ?
+        ((isdir || symlink!=null) ?
+            FsPermission.getDefault() :
             FsPermission.getFileDefault()) :
         permission;
     this.owner = (owner == null) ? "" : owner;
@@ -94,6 +95,34 @@ public class HdfsFileStatus {
     this.childrenNum = childrenNum;
     this.feInfo = feInfo;
     this.storagePolicy = storagePolicy;
+    this.tag = "default";
+  }
+
+  public HdfsFileStatus(long length, boolean isdir, int block_replication,
+                        long blocksize, long modification_time, long access_time,
+                        FsPermission permission, String owner, String group, byte[] symlink,
+                        byte[] path, long fileId, int childrenNum, FileEncryptionInfo feInfo,
+                        byte storagePolicy, String tag) {
+    this.length = length;
+    this.isdir = isdir;
+    this.block_replication = (short)block_replication;
+    this.blocksize = blocksize;
+    this.modification_time = modification_time;
+    this.access_time = access_time;
+    this.permission = (permission == null) ?
+            ((isdir || symlink!=null) ?
+                    FsPermission.getDefault() :
+                    FsPermission.getFileDefault()) :
+            permission;
+    this.owner = (owner == null) ? "" : owner;
+    this.group = (group == null) ? "" : group;
+    this.symlink = symlink;
+    this.path = path;
+    this.fileId = fileId;
+    this.childrenNum = childrenNum;
+    this.feInfo = feInfo;
+    this.storagePolicy = storagePolicy;
+    this.tag = (tag == null) ? "default" : tag;
   }
 
   /**
@@ -174,6 +203,10 @@ public class HdfsFileStatus {
    */
   public final String getGroup() {
     return group;
+  }
+
+  public final String getTag() {
+    return tag;
   }
   
   /**

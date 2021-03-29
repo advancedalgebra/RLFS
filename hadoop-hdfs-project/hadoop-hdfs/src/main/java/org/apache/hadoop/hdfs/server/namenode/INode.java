@@ -106,13 +106,13 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
   public abstract void setTag(String tag);
 
   /** Set user */
-  public final INode setUser(String user, int latestSnapshotId) {
+  final INode setUser(String user, int latestSnapshotId) {
     recordModification(latestSnapshotId);
     setUser(user);
     return this;
   }
 
-  final INode setTag(String tag, int latestSnapshotId) {
+  public final INode setTag(String tag, int latestSnapshotId) {
     recordModification(latestSnapshotId);
     setTag(tag);
     return this;

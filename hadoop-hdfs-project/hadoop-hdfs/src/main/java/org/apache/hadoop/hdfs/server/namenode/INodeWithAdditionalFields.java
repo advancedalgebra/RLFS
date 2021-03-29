@@ -310,9 +310,7 @@ public abstract class INodeWithAdditionalFields extends INode
     if (size != 0) {
       System.arraycopy(features, 0, arr, 0, size);
     }
-    Log.info("size: " + size);
     arr[size] = f;
-    Log.info("f: " + f);
     features = arr;
   }
 
@@ -394,7 +392,6 @@ public abstract class INodeWithAdditionalFields extends INode
   public void addXAttrFeature(XAttrFeature f) {
     XAttrFeature f1 = getXAttrFeature();
     Preconditions.checkState(f1 == null, "Duplicated XAttrFeature");
-    Log.info("---------------addXAttrFeature---------------");
     addFeature(f);
   }
 

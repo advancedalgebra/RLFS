@@ -94,3 +94,8 @@ message GetTagRequestProto {
 message GetTagResponseProto {
   required string tag = 1;
 }
+
+message TagEditLogProto {
+  optional string src = 1;
+  required string tag = 2;
+}
