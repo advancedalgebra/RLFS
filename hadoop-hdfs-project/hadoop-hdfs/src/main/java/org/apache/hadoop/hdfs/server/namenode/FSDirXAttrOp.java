@@ -31,6 +31,7 @@ import org.apache.hadoop.hdfs.protocol.HdfsFileStatus;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos;
 import org.apache.hadoop.hdfs.protocolPB.PBHelper;
 import org.apache.hadoop.security.AccessControlException;
+import org.mortbay.log.Log;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -63,6 +64,11 @@ class FSDirXAttrOp {
       throws IOException {
     checkXAttrsConfigFlag(fsd);
     checkXAttrSize(fsd, xAttr);
+    Log.info("--------SetXattr--------------");
+    Log.info("Fsd: " + fsd);
+    Log.info("Src: " + src);
+    Log.info("Xattr: " + xAttr);
+    Log.info("flag: " + flag);
     FSPermissionChecker pc = fsd.getPermissionChecker();
     XAttrPermissionFilter.checkPermissionForApi(
         pc, xAttr, FSDirectory.isReservedRawName(src));
@@ -74,12 +80,22 @@ class FSDirXAttrOp {
     fsd.writeLock();
     try {
       iip = fsd.getINodesInPath4Write(src);
+      Log.info("iip: " + iip);
       checkXAttrChangeAccess(fsd, iip, xAttr, pc);
       unprotectedSetXAttrs(fsd, src, xAttrs, flag);
     } finally {
       fsd.writeUnlock();
     }
     fsd.getEditLog().logSetXAttrs(src, xAttrs, logRetryCache);
+    return fsd.getAuditFileInfo(iip);
+  }
+
+  static HdfsFileStatus setTag(
+          FSDirectory fsd, String src, String tag, boolean logRetryCache)
+          throws IOException {
+    INodesInPath iip;
+    iip = fsd.getINodesInPath4Write(src);
+    Log.info("-------------------receive--------------------");
     return fsd.getAuditFileInfo(iip);
   }
 
@@ -127,6 +143,12 @@ class FSDirXAttrOp {
       }
     }
     return toGet;
+  }
+
+  static String getTag(FSDirectory fsd, final String srcArg)
+          throws IOException {
+    String src = srcArg;
+    return src;
   }
 
   static List<XAttr> listXAttrs(
@@ -265,9 +287,12 @@ class FSDirXAttrOp {
     INodesInPath iip = fsd.getINodesInPath4Write(FSDirectory.normalizePath(src),
         true);
     INode inode = FSDirectory.resolveLastINode(iip);
+    Log.info("Inode: " + inode);
+    Log.info("Inode_Xattr: " + inode.getXAttrFeature());
     int snapshotId = iip.getLatestSnapshotId();
     List<XAttr> existingXAttrs = XAttrStorage.readINodeXAttrs(inode);
     List<XAttr> newXAttrs = setINodeXAttrs(fsd, existingXAttrs, xAttrs, flag);
+    Log.info("newXAttrs: " + newXAttrs);
     final boolean isFile = inode.isFile();
 
     for (XAttr xattr : newXAttrs) {
@@ -294,6 +319,7 @@ class FSDirXAttrOp {
     }
 
     XAttrStorage.updateINodeXAttrs(inode, newXAttrs, snapshotId);
+    Log.info("Inode_Xattr: " + inode.getXAttrFeature());
     return inode;
   }
 

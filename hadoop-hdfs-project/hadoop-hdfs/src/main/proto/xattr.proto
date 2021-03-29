@@ -78,3 +78,19 @@ message RemoveXAttrRequestProto {
 
 message RemoveXAttrResponseProto {
 }
+
+message SetTagRequestProto {
+  required string src    = 1;
+  required string tag    = 2;
+}
+
+message SetTagResponseProto {
+}
+
+message GetTagRequestProto {
+  required string src = 1;
+}
+
+message GetTagResponseProto {
+  required string tag = 1;
+}

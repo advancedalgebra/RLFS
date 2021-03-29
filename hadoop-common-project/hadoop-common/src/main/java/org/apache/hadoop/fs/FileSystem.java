@@ -2367,10 +2367,6 @@ public abstract class FileSystem extends Configured implements Closeable {
       ) throws IOException {
   }
 
-  public void setTag(Path p, String tag
-  ) throws IOException {
-  }
-
   /**
    * Create a snapshot with a default name.
    * @param path The directory where snapshots will be taken.
@@ -2516,6 +2512,9 @@ public abstract class FileSystem extends Configured implements Closeable {
         XAttrSetFlag.REPLACE));
   }
 
+  public void setTag(Path p, String tag) throws IOException {
+    setTag(p, tag, 0);
+  }
   /**
    * Set an xattr of a file or directory.
    * The name must be prefixed with the namespace followed by ".". For example,
@@ -2533,6 +2532,11 @@ public abstract class FileSystem extends Configured implements Closeable {
       EnumSet<XAttrSetFlag> flag) throws IOException {
     throw new UnsupportedOperationException(getClass().getSimpleName()
         + " doesn't support setXAttr");
+  }
+
+  public void setTag(Path path, String name, int flag) throws IOException {
+    throw new UnsupportedOperationException(getClass().getSimpleName()
+            + " doesn't support setTag");
   }
 
   /**

@@ -87,19 +87,34 @@ public abstract class INode implements INodeAttributes, Diff.Element<byte[]> {
    */
   abstract String getUserName(int snapshotId);
 
+  abstract String getTag(int snapshotId);
+
   /** The same as getUserName(Snapshot.CURRENT_STATE_ID). */
   @Override
   public final String getUserName() {
     return getUserName(Snapshot.CURRENT_STATE_ID);
   }
 
+  @Override
+  public final String getTag() {
+    return getTag(Snapshot.CURRENT_STATE_ID);
+  }
+
   /** Set user */
   abstract void setUser(String user);
 
+  public abstract void setTag(String tag);
+
   /** Set user */
-  final INode setUser(String user, int latestSnapshotId) {
+  public final INode setUser(String user, int latestSnapshotId) {
     recordModification(latestSnapshotId);
     setUser(user);
+    return this;
+  }
+
+  final INode setTag(String tag, int latestSnapshotId) {
+    recordModification(latestSnapshotId);
+    setTag(tag);
     return this;
   }
   /**

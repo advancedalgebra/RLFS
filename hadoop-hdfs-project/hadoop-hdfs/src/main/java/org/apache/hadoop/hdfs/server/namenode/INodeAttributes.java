@@ -61,6 +61,8 @@ public interface INodeAttributes {
   /** @return the modification time. */
   public long getModificationTime();
 
+  public String getTag();
+
   /** @return the access time. */
   public long getAccessTime();
 
@@ -72,6 +74,7 @@ public interface INodeAttributes {
     private final long modificationTime;
     private final long accessTime;
     private XAttrFeature xAttrFeature;
+    private String tag;
 
     SnapshotCopy(byte[] name, PermissionStatus permissions,
         AclFeature aclFeature, long modificationTime, long accessTime, 
@@ -87,6 +90,21 @@ public interface INodeAttributes {
       this.xAttrFeature = xAttrFeature;
     }
 
+    SnapshotCopy(byte[] name, PermissionStatus permissions,
+                 AclFeature aclFeature, long modificationTime, long accessTime,
+                 XAttrFeature xAttrFeature, String tag) {
+      this.name = name;
+      this.permission = PermissionStatusFormat.toLong(permissions);
+      if (aclFeature != null) {
+        aclFeature = AclStorage.addAclFeature(aclFeature);
+      }
+      this.aclFeature = aclFeature;
+      this.modificationTime = modificationTime;
+      this.accessTime = accessTime;
+      this.xAttrFeature = xAttrFeature;
+      this.tag = tag;
+    }
+
     SnapshotCopy(INode inode) {
       this.name = inode.getLocalNameBytes();
       this.permission = inode.getPermissionLong();
@@ -98,6 +116,7 @@ public interface INodeAttributes {
       this.modificationTime = inode.getModificationTime();
       this.accessTime = inode.getAccessTime();
       this.xAttrFeature = inode.getXAttrFeature();
+      this.tag = inode.getTag();
     }
 
     @Override
@@ -143,6 +162,11 @@ public interface INodeAttributes {
     @Override
     public final long getAccessTime() {
       return accessTime;
+    }
+
+    @Override
+    public final String getTag() {
+      return tag;
     }
     
     @Override

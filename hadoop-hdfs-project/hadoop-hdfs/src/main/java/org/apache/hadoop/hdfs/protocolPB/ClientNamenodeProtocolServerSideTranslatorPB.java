@@ -202,12 +202,16 @@ import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.DatanodeInfoProto;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.LocatedBlockProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.GetXAttrsRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.GetXAttrsResponseProto;
+import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.GetTagRequestProto;
+import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.GetTagResponseProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.ListXAttrsRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.ListXAttrsResponseProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.RemoveXAttrRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.RemoveXAttrResponseProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.SetXAttrRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.SetXAttrResponseProto;
+import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.SetTagRequestProto;
+import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.SetTagResponseProto;
 import org.apache.hadoop.hdfs.security.token.block.DataEncryptionKey;
 import org.apache.hadoop.hdfs.security.token.delegation.DelegationTokenIdentifier;
 import org.apache.hadoop.hdfs.server.namenode.INodeId;
@@ -339,6 +343,9 @@ public class ClientNamenodeProtocolServerSideTranslatorPB implements
   
   private static final SetXAttrResponseProto
     VOID_SETXATTR_RESPONSE = SetXAttrResponseProto.getDefaultInstance();
+
+  private static final SetTagResponseProto
+          VOID_SETTAG_RESPONSE = SetTagResponseProto.getDefaultInstance();
   
   private static final RemoveXAttrResponseProto
     VOID_REMOVEXATTR_RESPONSE = RemoveXAttrResponseProto.getDefaultInstance();
@@ -1405,11 +1412,32 @@ public class ClientNamenodeProtocolServerSideTranslatorPB implements
   }
 
   @Override
+  public SetTagResponseProto setTag(RpcController controller,
+                                        SetTagRequestProto req) throws ServiceException {
+    try {
+      server.setTag(req.getSrc(), req.getTag());
+    } catch (IOException e) {
+      throw new ServiceException(e);
+    }
+    return VOID_SETTAG_RESPONSE;
+  }
+
+  @Override
   public GetXAttrsResponseProto getXAttrs(RpcController controller,
       GetXAttrsRequestProto req) throws ServiceException {
     try {
-      return PBHelper.convertXAttrsResponse(server.getXAttrs(req.getSrc(), 
+      return PBHelper.convertXAttrsResponse(server.getXAttrs(req.getSrc(),
           PBHelper.convertXAttrs(req.getXAttrsList())));
+    } catch (IOException e) {
+      throw new ServiceException(e);
+    }
+  }
+
+  @Override
+  public GetTagResponseProto getTag(RpcController controller,
+                                          GetTagRequestProto req) throws ServiceException {
+    try {
+      return PBHelper.convertTagResponse(server.getTag(req.getSrc()));
     } catch (IOException e) {
       throw new ServiceException(e);
     }

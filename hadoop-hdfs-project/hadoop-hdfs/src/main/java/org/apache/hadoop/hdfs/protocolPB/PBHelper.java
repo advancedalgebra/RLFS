@@ -175,6 +175,7 @@ import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.StorageUuidsProto;
 import org.apache.hadoop.hdfs.protocol.proto.InotifyProtos;
 import org.apache.hadoop.hdfs.protocol.proto.JournalProtocolProtos.JournalInfoProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.GetXAttrsResponseProto;
+import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.GetTagResponseProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.ListXAttrsResponseProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.XAttrProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.XAttrProto.XAttrNamespaceProto;
@@ -2466,12 +2467,26 @@ public class PBHelper {
     return convertXAttrs(xAttrs);
   }
 
+  public static String convert(GetTagResponseProto a) {
+    return a.getTag();
+  }
+
   public static GetXAttrsResponseProto convertXAttrsResponse(
-      List<XAttr> xAttrs) {
+          List<XAttr> xAttrs) {
     GetXAttrsResponseProto.Builder builder = GetXAttrsResponseProto
         .newBuilder();
     if (xAttrs != null) {
       builder.addAllXAttrs(convertXAttrProto(xAttrs));
+    }
+    return builder.build();
+  }
+
+
+  public static GetTagResponseProto convertTagResponse(
+          String tag) {
+    GetTagResponseProto.Builder builder = GetTagResponseProto.newBuilder();
+    if (tag != null) {
+      builder.setTag(tag);
     }
     return builder.build();
   }

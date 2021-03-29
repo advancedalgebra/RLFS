@@ -18,6 +18,7 @@ package org.apache.hadoop.hdfs.protocol;
 
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
+import org.mortbay.log.Log;
 
 /**
  * This class defines a partial listing of a directory to support
@@ -43,6 +44,7 @@ public class DirectoryListing {
       throw new IllegalArgumentException("Partial listing is empty but " +
           "the number of remaining entries is not zero");
     }
+    Log.info("-----------------DirectoryListing----------------");
     this.partialListing = partialListing;
     this.remainingEntries = remainingEntries;
   }

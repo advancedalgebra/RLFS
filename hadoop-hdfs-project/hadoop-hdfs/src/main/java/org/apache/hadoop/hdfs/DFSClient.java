@@ -3311,16 +3311,33 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
   public void setXAttr(String src, String name, byte[] value, 
       EnumSet<XAttrSetFlag> flag) throws IOException {
     checkOpen();
-    TraceScope scope = getPathTraceScope("setXAttr", src);
+//    TraceScope scope = getPathTraceScope("setXAttr", src);
+//    try {
+//      namenode.setXAttr(src, XAttrHelper.buildXAttr(name, value), flag);
+//    } catch (RemoteException re) {
+//      throw re.unwrapRemoteException(AccessControlException.class,
+//                                     FileNotFoundException.class,
+//                                     NSQuotaExceededException.class,
+//                                     SafeModeException.class,
+//                                     SnapshotAccessControlException.class,
+//                                     UnresolvedPathException.class);
+//    } finally {
+//      scope.close();
+//    }
+  }
+
+  public void setTag(String src, String tag) throws IOException {
+    checkOpen();
+    TraceScope scope = getPathTraceScope("setTag", src);
     try {
-      namenode.setXAttr(src, XAttrHelper.buildXAttr(name, value), flag);
+      namenode.setTag(src, tag);
     } catch (RemoteException re) {
       throw re.unwrapRemoteException(AccessControlException.class,
-                                     FileNotFoundException.class,
-                                     NSQuotaExceededException.class,
-                                     SafeModeException.class,
-                                     SnapshotAccessControlException.class,
-                                     UnresolvedPathException.class);
+              FileNotFoundException.class,
+              NSQuotaExceededException.class,
+              SafeModeException.class,
+              SnapshotAccessControlException.class,
+              UnresolvedPathException.class);
     } finally {
       scope.close();
     }

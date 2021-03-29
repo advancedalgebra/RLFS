@@ -26,6 +26,7 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.DFSUtil;
+import org.mortbay.log.Log;
 
 /** Interface that represents the over the wire information for a file.
  */
@@ -260,6 +261,7 @@ public class HdfsFileStatus {
   }
 
   public final FileStatus makeQualified(URI defaultUri, Path path) {
+    Log.info("getLen(): " + getLen());
     return new FileStatus(getLen(), isDir(), getReplication(),
         getBlockSize(), getModificationTime(),
         getAccessTime(),
