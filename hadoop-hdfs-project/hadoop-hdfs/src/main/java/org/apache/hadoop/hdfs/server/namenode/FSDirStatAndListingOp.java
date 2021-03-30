@@ -40,7 +40,6 @@ import org.apache.hadoop.hdfs.server.blockmanagement.BlockStoragePolicySuite;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.DirectorySnapshottableFeature;
 import org.apache.hadoop.hdfs.server.namenode.snapshot.Snapshot;
 import org.apache.hadoop.hdfs.util.ReadOnlyList;
-import org.mortbay.log.Log;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -95,25 +94,19 @@ class FSDirStatAndListingOp {
   static HdfsFileStatus getFileInfo(
       FSDirectory fsd, String srcArg, boolean resolveLink)
       throws IOException {
-    Log.info("------------------------getFileinfo1---------------------------");
     String src = srcArg;
-    Log.info("src: " + src);
     if (!DFSUtil.isValidName(src)) {
       throw new InvalidPathException("Invalid file name: " + src);
     }
     FSPermissionChecker pc = fsd.getPermissionChecker();
     byte[][] pathComponents = FSDirectory.getPathComponentsForReservedPath(src);
     src = fsd.resolvePath(pc, src, pathComponents);
-    Log.info("src: " + src);
     final INodesInPath iip = fsd.getINodesInPath(src, resolveLink);
     boolean isSuperUser = true;
     if (fsd.isPermissionEnabled()) {
-      Log.info("fsd.isPermissionEnabled()");
       fsd.checkPermission(pc, iip, false, null, null, null, null, false);
       isSuperUser = pc.isSuperUser();
-      Log.info("isSuperUser" + isSuperUser);
     }
-    Log.info("------------------------getFileinfo1---------------------------");
     return getFileInfo(fsd, src, resolveLink,
         FSDirectory.isReservedRawName(srcArg), isSuperUser);
   }
@@ -185,7 +178,6 @@ class FSDirStatAndListingOp {
           .ID_UNSPECIFIED;
 
       if (!targetNode.isDirectory()) {
-        Log.info("!targetNode.isDirectory()");
         return new DirectoryListing(
             new HdfsFileStatus[]{createFileStatus(fsd, src,
                 HdfsFileStatus.EMPTY_NAME, targetNode, needLocation,
@@ -193,7 +185,6 @@ class FSDirStatAndListingOp {
       }
 
       final INodeDirectory dirInode = targetNode.asDirectory();
-//      Log.info("dirInode: " + dirInode);
       final ReadOnlyList<INode> contents = dirInode.getChildrenList(snapshot);
       int startChild = INodeDirectory.nextChild(contents, startAfter);
       int totalNumChildren = contents.size();
@@ -204,7 +195,6 @@ class FSDirStatAndListingOp {
       HdfsFileStatus listing[] = new HdfsFileStatus[numOfListing];
       for (int i=0; i<numOfListing && locationBudget>0; i++) {
         INode cur = contents.get(startChild+i);
-//        Log.info("Cur: " + cur);
         byte curPolicy = isSuperUser && !cur.isSymlink()?
             cur.getLocalStoragePolicyID():
             BlockStoragePolicySuite.ID_UNSPECIFIED;
@@ -226,7 +216,6 @@ class FSDirStatAndListingOp {
       if (listingCnt < numOfListing) {
           listing = Arrays.copyOf(listing, listingCnt);
       }
-      Log.info("Stat_Tag: " + listing[0].getTag());
       return new DirectoryListing(
           listing, totalNumChildren-startChild-listingCnt);
     } finally {
@@ -282,7 +271,6 @@ class FSDirStatAndListingOp {
       FSDirectory fsd, String path, INodesInPath src, boolean isRawPath,
       boolean includeStoragePolicy)
       throws IOException {
-//    Log.info("------------------------getFileinfo3---------------------------");
     fsd.readLock();
     try {
       final INode i = src.getLastINode();
@@ -292,7 +280,6 @@ class FSDirStatAndListingOp {
           fsd, path, HdfsFileStatus.EMPTY_NAME, i, policyId,
           src.getPathSnapshotId(), isRawPath, src);
     } finally {
-//      Log.info("------------------------getFileinfo3---------------------------");
       fsd.readUnlock();
     }
   }
@@ -302,11 +289,8 @@ class FSDirStatAndListingOp {
       boolean includeStoragePolicy)
     throws IOException {
     String srcs = FSDirectory.normalizePath(src);
-    Log.info("------------------------getFileinfo2---------------------------");
-    Log.info("srcs: " + srcs);
     if (srcs.endsWith(HdfsConstants.SEPARATOR_DOT_SNAPSHOT_DIR)) {
       if (fsd.getINode4DotSnapshot(srcs) != null) {
-        Log.info("(fsd.getINode4DotSnapshot(srcs) != null");
         return new HdfsFileStatus(0, true, 0, 0, 0, 0, null, null, null, null,
             HdfsFileStatus.EMPTY_NAME, -1L, 0, null,
             BlockStoragePolicySuite.ID_UNSPECIFIED);
@@ -315,9 +299,7 @@ class FSDirStatAndListingOp {
     }
     fsd.readLock();
     try {
-      Log.info("------------------------getFileinfo2---------------------------");
       final INodesInPath iip = fsd.getINodesInPath(srcs, resolveLink);
-//      Log.info("iip: " + iip);
       return getFileInfo(fsd, src, iip, isRawPath, includeStoragePolicy);
     } finally {
       fsd.readUnlock();
@@ -398,8 +380,6 @@ class FSDirStatAndListingOp {
 
      INodeAttributes nodeAttrs =
          fsd.getAttributes(fullPath, path, node, snapshot);
-    Log.info("Size: " + size);
-    Log.info("Tag: " + nodeAttrs.getTag());
     return new HdfsFileStatus(
         size,
         node.isDirectory(),
