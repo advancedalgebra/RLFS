@@ -294,13 +294,13 @@ public class HdfsFileStatus {
   }
 
   public final FileStatus makeQualified(URI defaultUri, Path path) {
-    Log.info("getLen(): " + getLen());
+//    Log.info("getLen(): " + getLen());
     return new FileStatus(getLen(), isDir(), getReplication(),
         getBlockSize(), getModificationTime(),
         getAccessTime(),
         getPermission(), getOwner(), getGroup(),
         isSymlink() ? new Path(getSymlink()) : null,
         (getFullPath(path)).makeQualified(
-            defaultUri, null), "hdfsfilesystem"); // fully-qualify path
+            defaultUri, null), getTag()); // fully-qualify path
   }
 }

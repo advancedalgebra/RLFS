@@ -329,7 +329,6 @@ class FSDirXAttrOp {
     }
 
     XAttrStorage.updateINodeXAttrs(inode, newXAttrs, snapshotId);
-    Log.info("Inode_Xattr: " + inode.getXAttrFeature());
     return inode;
   }
 

@@ -1445,7 +1445,7 @@ public class PBHelper {
         fs.hasChildrenNum() ? fs.getChildrenNum() : -1,
         fs.hasFileEncryptionInfo() ? convert(fs.getFileEncryptionInfo()) : null,
         fs.hasStoragePolicy() ? (byte) fs.getStoragePolicy()
-            : BlockStoragePolicySuite.ID_UNSPECIFIED);
+            : BlockStoragePolicySuite.ID_UNSPECIFIED, fs.getTag());
   }
 
   public static SnapshottableDirectoryStatus convert(
@@ -1489,7 +1489,7 @@ public class PBHelper {
       setPermission(PBHelper.convert(fs.getPermission())).
       setOwner(fs.getOwner()).
       setGroup(fs.getGroup()).
-      setFileId(fs.getFileId()).
+      setFileId(fs.getFileId()).setTag(fs.getTag()).
       setChildrenNum(fs.getChildrenNum()).
       setPath(ByteString.copyFrom(fs.getLocalNameInBytes())).
       setStoragePolicy(fs.getStoragePolicy());

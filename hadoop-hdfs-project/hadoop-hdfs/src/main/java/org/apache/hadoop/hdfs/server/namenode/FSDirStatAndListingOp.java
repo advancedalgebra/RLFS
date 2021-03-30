@@ -49,17 +49,14 @@ import java.util.Arrays;
 class FSDirStatAndListingOp {
   static DirectoryListing getListingInt(FSDirectory fsd, final String srcArg,
       byte[] startAfter, boolean needLocation) throws IOException {
-    Log.info("---------------------getlistingint----------------------------");
     FSPermissionChecker pc = fsd.getPermissionChecker();
     byte[][] pathComponents = FSDirectory
         .getPathComponentsForReservedPath(srcArg);
     final String startAfterString = new String(startAfter, Charsets.UTF_8);
     final String src = fsd.resolvePath(pc, srcArg, pathComponents);
     final INodesInPath iip = fsd.getINodesInPath(src, true);
-    Log.info("src: " + src);
     // Get file name when startAfter is an INodePath
     if (FSDirectory.isReservedName(startAfterString)) {
-      Log.info("src: FSDirectory.isReservedName(startAfterString)");
       byte[][] startAfterComponents = FSDirectory
           .getPathComponentsForReservedPath(startAfterString);
       try {
@@ -81,9 +78,7 @@ class FSDirStatAndListingOp {
         fsd.checkTraverse(pc, iip);
       }
       isSuperUser = pc.isSuperUser();
-      Log.info("isSuperUser: " + isSuperUser);
     }
-    Log.info("---------------------getlistingint----------------------------");
     return getListing(fsd, iip, src, startAfter, needLocation, isSuperUser);
   }
 
@@ -174,7 +169,6 @@ class FSDirStatAndListingOp {
   private static DirectoryListing getListing(FSDirectory fsd, INodesInPath iip,
       String src, byte[] startAfter, boolean needLocation, boolean isSuperUser)
       throws IOException {
-    Log.info("----------------------getlisting---------------------------");
     String srcs = FSDirectory.normalizePath(src);
     final boolean isRawPath = FSDirectory.isReservedRawName(src);
     fsd.readLock();
@@ -184,7 +178,6 @@ class FSDirStatAndListingOp {
       }
       final int snapshot = iip.getPathSnapshotId();
       final INode targetNode = iip.getLastINode();
-      Log.info("Targetnode: " + targetNode);
       if (targetNode == null)
         return null;
       byte parentStoragePolicy = isSuperUser ?
@@ -200,19 +193,18 @@ class FSDirStatAndListingOp {
       }
 
       final INodeDirectory dirInode = targetNode.asDirectory();
-      Log.info("dirInode: " + dirInode);
+//      Log.info("dirInode: " + dirInode);
       final ReadOnlyList<INode> contents = dirInode.getChildrenList(snapshot);
       int startChild = INodeDirectory.nextChild(contents, startAfter);
       int totalNumChildren = contents.size();
       int numOfListing = Math.min(totalNumChildren - startChild,
           fsd.getLsLimit());
-      Log.info("numOFListing: " + numOfListing);
       int locationBudget = fsd.getLsLimit();
       int listingCnt = 0;
       HdfsFileStatus listing[] = new HdfsFileStatus[numOfListing];
       for (int i=0; i<numOfListing && locationBudget>0; i++) {
         INode cur = contents.get(startChild+i);
-        Log.info("Cur: " + cur);
+//        Log.info("Cur: " + cur);
         byte curPolicy = isSuperUser && !cur.isSymlink()?
             cur.getLocalStoragePolicyID():
             BlockStoragePolicySuite.ID_UNSPECIFIED;
@@ -234,7 +226,7 @@ class FSDirStatAndListingOp {
       if (listingCnt < numOfListing) {
           listing = Arrays.copyOf(listing, listingCnt);
       }
-      Log.info("----------------------getlisting---------------------------");
+      Log.info("Stat_Tag: " + listing[0].getTag());
       return new DirectoryListing(
           listing, totalNumChildren-startChild-listingCnt);
     } finally {
@@ -368,11 +360,9 @@ class FSDirStatAndListingOp {
       INodesInPath iip)
       throws IOException {
     if (needLocation) {
-      Log.info("needLocation");
       return createLocatedFileStatus(fsd, fullPath, path, node, storagePolicy,
           snapshot, isRawPath, iip);
     } else {
-      Log.info("noneedLocation");
       return createFileStatus(fsd, fullPath, path, node, storagePolicy, snapshot,
           isRawPath, iip);
     }
@@ -385,7 +375,6 @@ class FSDirStatAndListingOp {
       FSDirectory fsd, String fullPath, byte[] path, INode node,
       byte storagePolicy, int snapshot, boolean isRawPath,
       INodesInPath iip) throws IOException {
-     Log.info("-----------------------------createFileStatus--------------------------------");
      long size = 0;     // length is zero for directories
      short replication = 0;
      long blocksize = 0;
@@ -394,7 +383,6 @@ class FSDirStatAndListingOp {
      final FileEncryptionInfo feInfo = isRawPath ? null :
          fsd.getFileEncryptionInfo(node, snapshot, iip);
      if (node.isFile()) {
-       Log.info("isfile");
        final INodeFile fileNode = node.asFile();
        size = fileNode.computeFileSize(snapshot);
        replication = fileNode.getFileReplication(snapshot);
@@ -402,7 +390,6 @@ class FSDirStatAndListingOp {
        isEncrypted = (feInfo != null) ||
            (isRawPath && fsd.isInAnEZ(INodesInPath.fromINode(node)));
      } else {
-       Log.info("not a file");
        isEncrypted = fsd.isInAnEZ(INodesInPath.fromINode(node));
      }
 
@@ -411,12 +398,6 @@ class FSDirStatAndListingOp {
 
      INodeAttributes nodeAttrs =
          fsd.getAttributes(fullPath, path, node, snapshot);
-     Log.info("nodeAttrs: " + nodeAttrs);
-//     Log.info("GroupName: " + nodeAttrs.getGroupName());
-//    Log.info("UserName: " + nodeAttrs.getUserName());
-//    Log.info("AccessTime: " + nodeAttrs.getAccessTime());
-//    Log.info("Fspermission: " + nodeAttrs.getFsPermission());
-//    Log.info("XAttrFeature: " + nodeAttrs.getXAttrFeature());
     Log.info("Size: " + size);
     Log.info("Tag: " + nodeAttrs.getTag());
     return new HdfsFileStatus(

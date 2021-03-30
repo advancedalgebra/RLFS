@@ -44,7 +44,6 @@ public class DirectoryListing {
       throw new IllegalArgumentException("Partial listing is empty but " +
           "the number of remaining entries is not zero");
     }
-    Log.info("-----------------DirectoryListing----------------");
     this.partialListing = partialListing;
     this.remainingEntries = remainingEntries;
   }
