@@ -27,7 +27,6 @@ import com.google.common.collect.Maps;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.fs.XAttr;
 import org.apache.hadoop.hdfs.protocol.QuotaExceededException;
-import org.mortbay.log.Log;
 
 /**
  * XAttrStorage is used to read and set xattrs for an inode.
@@ -83,13 +82,11 @@ public class XAttrStorage {
       }
       return;
     }
-    Log.info("------------------------------------------------------");
     // Dedupe the xAttr name and save them into a new interned list
     List<XAttr> internedXAttrs = Lists.newArrayListWithCapacity(xAttrs.size());
     for (XAttr xAttr : xAttrs) {
       final String name = xAttr.getName();
       String internedName = internedNames.get(name);
-      Log.info("internedName: " + internedName);
       if (internedName == null) {
         internedName = name;
         internedNames.put(internedName, internedName);
@@ -100,15 +97,12 @@ public class XAttrStorage {
           .setValue(xAttr.getValue())
           .build();
       internedXAttrs.add(internedXAttr);
-      Log.info("internedXAttr: " + internedXAttr);
     }
     // Save the list of interned xattrs
     ImmutableList<XAttr> newXAttrs = ImmutableList.copyOf(internedXAttrs);
-    Log.info("newXAttrs: " + newXAttrs);
     if (inode.getXAttrFeature() != null) {
       inode.removeXAttrFeature(snapshotId);
     }
-    Log.info("------------------------------------------------------");
     inode.addXAttrFeature(new XAttrFeature(newXAttrs), snapshotId);
   }
 }

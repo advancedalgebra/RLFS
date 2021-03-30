@@ -76,7 +76,6 @@ import org.apache.hadoop.ipc.RpcConstants;
 import org.apache.hadoop.security.token.delegation.DelegationKey;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.StringUtils;
-import org.mortbay.log.Log;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -4514,7 +4513,6 @@ public abstract class FSEditLogOp {
       buf.writeByte(op.opCode.getOpCode());
       buf.writeInt(0); // write 0 for the length first
       buf.writeLong(op.txid);
-      Log.info("Op: " + op);
       op.writeFields(buf);
       int end = buf.getLength();
       

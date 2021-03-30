@@ -25,7 +25,6 @@ import org.apache.hadoop.hdfs.util.LongBitFormat;
 import org.apache.hadoop.util.LightWeightGSet.LinkedElement;
 
 import com.google.common.base.Preconditions;
-import org.mortbay.log.Log;
 
 /**
  * {@link INode} with additional fields including id, name, permission,

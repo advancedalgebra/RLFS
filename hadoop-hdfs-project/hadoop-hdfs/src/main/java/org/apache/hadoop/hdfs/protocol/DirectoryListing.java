@@ -18,7 +18,6 @@ package org.apache.hadoop.hdfs.protocol;
 
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
-import org.mortbay.log.Log;
 
 /**
  * This class defines a partial listing of a directory to support

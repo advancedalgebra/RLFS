@@ -1150,7 +1150,6 @@ public class FSEditLog implements LogsPurgeable {
     final SetTagOp op = SetTagOp.getInstance();
     op.src = src;
     op.tag = tag;
-    org.mortbay.log.Log.info("Op: " + op);
     logRpcIds(op, toLogRpcIds);
     logEdit(op);
   }

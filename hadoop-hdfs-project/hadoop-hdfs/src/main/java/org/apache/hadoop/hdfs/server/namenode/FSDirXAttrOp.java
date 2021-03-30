@@ -31,7 +31,6 @@ import org.apache.hadoop.hdfs.protocol.HdfsFileStatus;
 import org.apache.hadoop.hdfs.protocol.proto.HdfsProtos;
 import org.apache.hadoop.hdfs.protocolPB.PBHelper;
 import org.apache.hadoop.security.AccessControlException;
-import org.mortbay.log.Log;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -64,11 +63,6 @@ class FSDirXAttrOp {
       throws IOException {
     checkXAttrsConfigFlag(fsd);
     checkXAttrSize(fsd, xAttr);
-    Log.info("--------SetXattr--------------");
-    Log.info("Fsd: " + fsd);
-    Log.info("Src: " + src);
-    Log.info("Xattr: " + xAttr);
-    Log.info("flag: " + flag);
     FSPermissionChecker pc = fsd.getPermissionChecker();
     XAttrPermissionFilter.checkPermissionForApi(
         pc, xAttr, FSDirectory.isReservedRawName(src));
@@ -80,7 +74,6 @@ class FSDirXAttrOp {
     fsd.writeLock();
     try {
       iip = fsd.getINodesInPath4Write(src);
-      Log.info("iip: " + iip);
       checkXAttrChangeAccess(fsd, iip, xAttr, pc);
       unprotectedSetXAttrs(fsd, src, xAttrs, flag);
     } finally {
@@ -100,7 +93,6 @@ class FSDirXAttrOp {
     fsd.writeLock();
     try {
       iip = fsd.getINodesInPath4Write(src);
-      Log.info("iip: " + iip);
       unprotectedSetTag(fsd, src, tag);
     } finally {
       fsd.writeUnlock();
@@ -297,12 +289,9 @@ class FSDirXAttrOp {
     INodesInPath iip = fsd.getINodesInPath4Write(FSDirectory.normalizePath(src),
         true);
     INode inode = FSDirectory.resolveLastINode(iip);
-    Log.info("Inode: " + inode);
-    Log.info("Inode_Xattr: " + inode.getXAttrFeature());
     int snapshotId = iip.getLatestSnapshotId();
     List<XAttr> existingXAttrs = XAttrStorage.readINodeXAttrs(inode);
     List<XAttr> newXAttrs = setINodeXAttrs(fsd, existingXAttrs, xAttrs, flag);
-    Log.info("newXAttrs: " + newXAttrs);
     final boolean isFile = inode.isFile();
 
     for (XAttr xattr : newXAttrs) {
@@ -338,10 +327,8 @@ class FSDirXAttrOp {
     INodesInPath iip = fsd.getINodesInPath4Write(FSDirectory.normalizePath(src),
             true);
     INode inode = FSDirectory.resolveLastINode(iip);
-    Log.info("Inode: " + inode);
     int snapshotId = iip.getLatestSnapshotId();
     inode.setTag(tag, snapshotId);
-    Log.info("Inode_Tag: " + inode.getTag());
     return inode;
   }
 
