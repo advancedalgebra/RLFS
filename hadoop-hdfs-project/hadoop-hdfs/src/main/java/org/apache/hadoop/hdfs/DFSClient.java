@@ -3325,6 +3325,23 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
       scope.close();
     }
   }
+
+  public void setTag(String src, String tag) throws IOException {
+    checkOpen();
+    TraceScope scope = getPathTraceScope("setTag", src);
+    try {
+      namenode.setTag(src, tag);
+    } catch (RemoteException re) {
+      throw re.unwrapRemoteException(AccessControlException.class,
+              FileNotFoundException.class,
+              NSQuotaExceededException.class,
+              SafeModeException.class,
+              SnapshotAccessControlException.class,
+              UnresolvedPathException.class);
+    } finally {
+      scope.close();
+    }
+  }
   
   public byte[] getXAttr(String src, String name) throws IOException {
     checkOpen();

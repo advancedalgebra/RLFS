@@ -1843,6 +1843,22 @@ class NameNodeRpcServer implements NamenodeProtocols {
       RetryCache.setState(cacheEntry, success);
     }
   }
+
+    @Override // ClientProtocol
+    public void setTag(String src, String tag) throws IOException {
+        checkNNStartup();
+        CacheEntry cacheEntry = RetryCache.waitForCompletion(retryCache);
+        if (cacheEntry != null && cacheEntry.isSuccess()) {
+            return; // Return previous response
+        }
+        boolean success = false;
+        try {
+            namesystem.setTag(src, tag, cacheEntry != null);
+            success = true;
+        } finally {
+            RetryCache.setState(cacheEntry, success);
+        }
+    }
   
   @Override // ClientProtocol
   public List<XAttr> getXAttrs(String src, List<XAttr> xAttrs) 
@@ -1850,6 +1866,13 @@ class NameNodeRpcServer implements NamenodeProtocols {
     checkNNStartup();
     return namesystem.getXAttrs(src, xAttrs);
   }
+
+    @Override // ClientProtocol
+    public String getTag(String src)
+            throws IOException {
+        checkNNStartup();
+        return namesystem.getTag(src);
+    }
 
   @Override // ClientProtocol
   public List<XAttr> listXAttrs(String src) throws IOException {

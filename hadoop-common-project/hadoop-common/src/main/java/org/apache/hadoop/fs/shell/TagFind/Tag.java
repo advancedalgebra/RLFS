@@ -86,7 +86,12 @@ final class Tag extends BaseExpression {
 
   @Override
   public Result apply(PathData item, int depth) throws IOException {
-    String tag = loadTag(item.path.toUri());
+    String tag = null;
+    if (item.fs.toString().split("\\[")[0].equals("DFS")) {
+      tag = item.stat.getTag();
+    } else {
+      tag = loadTag(item.path.toUri());
+    }
     if (!caseSensitive) {
       tag = StringUtils.toLowerCase(tag);
     }

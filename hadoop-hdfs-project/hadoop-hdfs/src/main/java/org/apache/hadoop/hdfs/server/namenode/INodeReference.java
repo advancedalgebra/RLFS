@@ -277,10 +277,20 @@ public abstract class INodeReference extends INode {
   }
   
   @Override
+  public final String getTag(int snapshotId) {
+    return referred.getTag(snapshotId);
+  }
+  
+  @Override
+  public final void setTag(String tag) {
+    referred.setTag(tag);
+  }
+
+  @Override
   public final long getAccessTime(int snapshotId) {
     return referred.getAccessTime(snapshotId);
   }
-  
+
   @Override
   public final void setAccessTime(long accessTime) {
     referred.setAccessTime(accessTime);

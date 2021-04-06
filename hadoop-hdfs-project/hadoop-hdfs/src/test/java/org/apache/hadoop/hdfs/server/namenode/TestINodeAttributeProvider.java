@@ -140,6 +140,11 @@ public class TestINodeAttributeProvider {
         }
 
         @Override
+        public String getTag() {
+          return (useDefault) ? inode.getTag() : "default";
+        }
+
+        @Override
         public long getAccessTime() {
           return (useDefault) ? inode.getAccessTime() : 0;
         }

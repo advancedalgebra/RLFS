@@ -87,6 +87,7 @@ import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.SetQuotaOp;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.SetReplicationOp;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.SetStoragePolicyOp;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.SetXAttrOp;
+import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.SetTagOp;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.SymlinkOp;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.TimesOp;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.UpdateBlocksOp;
@@ -892,6 +893,15 @@ public class FSEditLogLoader {
       }
       break;
     }
+      case OP_SET_TAG: {
+        SetTagOp setTagOp = (SetTagOp) op;
+        FSDirXAttrOp.unprotectedSetTag(fsDir, setTagOp.src,
+                setTagOp.tag);
+        if (toAddRetryCache) {
+          fsNamesys.addCacheEntry(setTagOp.rpcClientId, setTagOp.rpcCallId);
+        }
+        break;
+      }
     case OP_REMOVE_XATTR: {
       RemoveXAttrOp removeXAttrOp = (RemoveXAttrOp) op;
       FSDirXAttrOp.unprotectedRemoveXAttrs(fsDir, removeXAttrOp.src,

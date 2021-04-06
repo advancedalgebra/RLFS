@@ -54,7 +54,6 @@ class FSDirStatAndListingOp {
     final String startAfterString = new String(startAfter, Charsets.UTF_8);
     final String src = fsd.resolvePath(pc, srcArg, pathComponents);
     final INodesInPath iip = fsd.getINodesInPath(src, true);
-
     // Get file name when startAfter is an INodePath
     if (FSDirectory.isReservedName(startAfterString)) {
       byte[][] startAfterComponents = FSDirectory
@@ -165,7 +164,6 @@ class FSDirStatAndListingOp {
       throws IOException {
     String srcs = FSDirectory.normalizePath(src);
     final boolean isRawPath = FSDirectory.isReservedRawName(src);
-
     fsd.readLock();
     try {
       if (srcs.endsWith(HdfsConstants.SEPARATOR_DOT_SNAPSHOT_DIR)) {
@@ -299,7 +297,6 @@ class FSDirStatAndListingOp {
       }
       return null;
     }
-
     fsd.readLock();
     try {
       final INodesInPath iip = fsd.getINodesInPath(srcs, resolveLink);
@@ -367,7 +364,6 @@ class FSDirStatAndListingOp {
 
      final FileEncryptionInfo feInfo = isRawPath ? null :
          fsd.getFileEncryptionInfo(node, snapshot, iip);
-
      if (node.isFile()) {
        final INodeFile fileNode = node.asFile();
        size = fileNode.computeFileSize(snapshot);
@@ -384,7 +380,7 @@ class FSDirStatAndListingOp {
 
      INodeAttributes nodeAttrs =
          fsd.getAttributes(fullPath, path, node, snapshot);
-     return new HdfsFileStatus(
+    return new HdfsFileStatus(
         size,
         node.isDirectory(),
         replication,
@@ -399,7 +395,7 @@ class FSDirStatAndListingOp {
         node.getId(),
         childrenNum,
         feInfo,
-        storagePolicy);
+        storagePolicy, nodeAttrs.getTag());
   }
 
   /**

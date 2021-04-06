@@ -83,6 +83,24 @@ class FSDirXAttrOp {
     return fsd.getAuditFileInfo(iip);
   }
 
+  static HdfsFileStatus setTag(
+          FSDirectory fsd, String src, String tag, boolean logRetryCache)
+          throws IOException {
+    FSPermissionChecker pc = fsd.getPermissionChecker();
+    byte[][] pathComponents = FSDirectory.getPathComponentsForReservedPath(src);
+    src = fsd.resolvePath(pc, src, pathComponents);
+    INodesInPath iip;
+    fsd.writeLock();
+    try {
+      iip = fsd.getINodesInPath4Write(src);
+      unprotectedSetTag(fsd, src, tag);
+    } finally {
+      fsd.writeUnlock();
+    }
+    fsd.getEditLog().logSetTag(src, tag, logRetryCache);
+    return fsd.getAuditFileInfo(iip);
+  }
+
   static List<XAttr> getXAttrs(FSDirectory fsd, final String srcArg,
                                List<XAttr> xAttrs)
       throws IOException {
@@ -127,6 +145,12 @@ class FSDirXAttrOp {
       }
     }
     return toGet;
+  }
+
+  static String getTag(FSDirectory fsd, final String srcArg)
+          throws IOException {
+    String src = srcArg;
+    return src;
   }
 
   static List<XAttr> listXAttrs(
@@ -294,6 +318,17 @@ class FSDirXAttrOp {
     }
 
     XAttrStorage.updateINodeXAttrs(inode, newXAttrs, snapshotId);
+    return inode;
+  }
+
+  static INode unprotectedSetTag(FSDirectory fsd, final String src, final String tag)
+          throws IOException {
+    assert fsd.hasWriteLock();
+    INodesInPath iip = fsd.getINodesInPath4Write(FSDirectory.normalizePath(src),
+            true);
+    INode inode = FSDirectory.resolveLastINode(iip);
+    int snapshotId = iip.getLatestSnapshotId();
+    inode.setTag(tag, snapshotId);
     return inode;
   }
 

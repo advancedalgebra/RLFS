@@ -8066,6 +8066,25 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     logAuditEvent(true, "setXAttr", src, null, auditStat);
   }
 
+  void setTag(String src, String tag, boolean logRetryCache)
+          throws IOException {
+    checkOperation(OperationCategory.WRITE);
+    HdfsFileStatus auditStat = null;
+    writeLock();
+    try {
+      checkOperation(OperationCategory.WRITE);
+      checkNameNodeSafeMode("Cannot set Tag on " + src);
+      auditStat = FSDirXAttrOp.setTag(dir, src, tag, logRetryCache);
+    } catch (AccessControlException e) {
+      logAuditEvent(false, "setTag", src);
+      throw e;
+    } finally {
+      writeUnlock();
+    }
+    getEditLog().logSync();
+    logAuditEvent(true, "setTag", src, null, auditStat);
+  }
+
   List<XAttr> getXAttrs(final String src, List<XAttr> xAttrs)
       throws IOException {
     checkOperation(OperationCategory.READ);
@@ -8073,6 +8092,20 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     try {
       checkOperation(OperationCategory.READ);
       return FSDirXAttrOp.getXAttrs(dir, src, xAttrs);
+    } catch (AccessControlException e) {
+      logAuditEvent(false, "getXAttrs", src);
+      throw e;
+    } finally {
+      readUnlock();
+    }
+  }
+
+  String getTag(final String src) throws IOException {
+    checkOperation(OperationCategory.READ);
+    readLock();
+    try {
+      checkOperation(OperationCategory.READ);
+      return FSDirXAttrOp.getTag(dir, src);
     } catch (AccessControlException e) {
       logAuditEvent(false, "getXAttrs", src);
       throw e;

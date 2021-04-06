@@ -2118,6 +2118,24 @@ public class DistributedFileSystem extends FileSystem {
       }      
     }.resolve(this, absF);
   }
+
+  public void setTag(Path path, final String tag, int flag) throws IOException {
+    Path absF = fixRelativePart(path);
+    new FileSystemLinkResolver<Void>() {
+
+      @Override
+      public Void doCall(final Path p) throws IOException {
+        dfs.setTag(getPathName(p), tag);
+        return null;
+      }
+
+      @Override
+      public Void next(final FileSystem fs, final Path p) throws IOException {
+        fs.setTag(p, tag);
+        return null;
+      }
+    }.resolve(this, absF);
+  }
   
   @Override
   public byte[] getXAttr(Path path, final String name) throws IOException {

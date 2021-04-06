@@ -101,6 +101,8 @@ public abstract class INodeWithAdditionalFields extends INode
   private static final Feature[] EMPTY_FEATURE = new Feature[0];
   protected Feature[] features = EMPTY_FEATURE;
 
+  private String tag = null;
+
   private INodeWithAdditionalFields(INode parent, long id, byte[] name,
       long permission, long modificationTime, long accessTime) {
     super(parent);
@@ -111,17 +113,34 @@ public abstract class INodeWithAdditionalFields extends INode
     this.accessTime = accessTime;
   }
 
+  private INodeWithAdditionalFields(INode parent, long id, byte[] name,
+                                    long permission, long modificationTime, long accessTime, String tag) {
+    super(parent);
+    this.id = id;
+    this.name = name;
+    this.permission = permission;
+    this.modificationTime = modificationTime;
+    this.accessTime = accessTime;
+    this.tag = tag;
+  }
+
   INodeWithAdditionalFields(long id, byte[] name, PermissionStatus permissions,
       long modificationTime, long accessTime) {
     this(null, id, name, PermissionStatusFormat.toLong(permissions),
         modificationTime, accessTime);
+  }
+
+  INodeWithAdditionalFields(long id, byte[] name, PermissionStatus permissions,
+                            long modificationTime, long accessTime, String tag) {
+    this(null, id, name, PermissionStatusFormat.toLong(permissions),
+            modificationTime, accessTime, tag);
   }
   
   /** @param other Other node to be copied */
   INodeWithAdditionalFields(INodeWithAdditionalFields other) {
     this(other.getParentReference() != null ? other.getParentReference()
         : other.getParent(), other.getId(), other.getLocalNameBytes(),
-        other.permission, other.modificationTime, other.accessTime);
+        other.permission, other.modificationTime, other.accessTime, other.tag);
   }
 
   @Override
@@ -235,6 +254,14 @@ public abstract class INodeWithAdditionalFields extends INode
     return this.modificationTime;
   }
 
+  @Override
+  final String getTag(int snapshotId) {
+    if (snapshotId != Snapshot.CURRENT_STATE_ID) {
+      return getSnapshotINode(snapshotId).getTag();
+    }
+    return this.tag;
+  }
+
 
   /** Update modification time if it is larger than the current value. */
   @Override
@@ -253,6 +280,11 @@ public abstract class INodeWithAdditionalFields extends INode
   @Override
   public final void setModificationTime(long modificationTime) {
     this.modificationTime = modificationTime;
+  }
+
+  @Override
+  public final void setTag(String tag) {
+    this.tag = tag;
   }
 
   @Override
@@ -359,7 +391,6 @@ public abstract class INodeWithAdditionalFields extends INode
   public void addXAttrFeature(XAttrFeature f) {
     XAttrFeature f1 = getXAttrFeature();
     Preconditions.checkState(f1 == null, "Duplicated XAttrFeature");
-    
     addFeature(f);
   }
 

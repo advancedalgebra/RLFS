@@ -841,6 +841,10 @@ service ClientNamenodeProtocol {
       returns(SetXAttrResponseProto);
   rpc getXAttrs(GetXAttrsRequestProto)
       returns(GetXAttrsResponseProto);
+  rpc setTag(SetTagRequestProto)
+      returns(SetTagResponseProto);
+  rpc getTag(GetTagRequestProto)
+      returns(GetTagResponseProto);
   rpc listXAttrs(ListXAttrsRequestProto)
       returns(ListXAttrsResponseProto);
   rpc removeXAttr(RemoveXAttrRequestProto)

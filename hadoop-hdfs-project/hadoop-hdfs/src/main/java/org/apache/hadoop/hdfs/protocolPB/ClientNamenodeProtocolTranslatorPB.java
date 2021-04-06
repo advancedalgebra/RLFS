@@ -168,6 +168,8 @@ import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.GetXAttrsRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.ListXAttrsRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.RemoveXAttrRequestProto;
 import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.SetXAttrRequestProto;
+import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.SetTagRequestProto;
+import org.apache.hadoop.hdfs.protocol.proto.XAttrProtos.GetTagRequestProto;
 import org.apache.hadoop.hdfs.security.token.block.DataEncryptionKey;
 import org.apache.hadoop.hdfs.security.token.delegation.DelegationTokenIdentifier;
 import org.apache.hadoop.hdfs.server.namenode.NotReplicatedYetException;
@@ -1417,7 +1419,21 @@ public class ClientNamenodeProtocolTranslatorPB implements
       throw ProtobufHelper.getRemoteException(e);
     }
   }
-  
+
+  @Override
+  public void setTag(String src, String tag)
+          throws IOException {
+    SetTagRequestProto req = SetTagRequestProto.newBuilder()
+            .setSrc(src)
+            .setTag(tag)
+            .build();
+    try {
+      rpcProxy.setTag(null, req);
+    } catch (ServiceException e) {
+      throw ProtobufHelper.getRemoteException(e);
+    }
+  }
+
   @Override
   public List<XAttr> getXAttrs(String src, List<XAttr> xAttrs) 
       throws IOException {
@@ -1429,6 +1445,19 @@ public class ClientNamenodeProtocolTranslatorPB implements
     GetXAttrsRequestProto req = builder.build();
     try {
       return PBHelper.convert(rpcProxy.getXAttrs(null, req));
+    } catch (ServiceException e) {
+      throw ProtobufHelper.getRemoteException(e);
+    }
+  }
+
+  @Override
+  public String getTag(String src)
+          throws IOException {
+    GetTagRequestProto.Builder builder = GetTagRequestProto.newBuilder();
+    builder.setSrc(src);
+    GetTagRequestProto req = builder.build();
+    try {
+      return PBHelper.convert(rpcProxy.getTag(null, req));
     } catch (ServiceException e) {
       throw ProtobufHelper.getRemoteException(e);
     }

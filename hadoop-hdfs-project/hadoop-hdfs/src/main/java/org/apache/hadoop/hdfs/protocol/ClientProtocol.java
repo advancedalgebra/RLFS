@@ -1372,6 +1372,9 @@ public interface ClientProtocol {
   @AtMostOnce
   public void setXAttr(String src, XAttr xAttr, EnumSet<XAttrSetFlag> flag) 
       throws IOException;
+
+  @AtMostOnce
+  public void setTag(String src, String tag) throws IOException;
   
   /**
    * Get xattrs of a file or directory. Values in xAttrs parameter are ignored.
@@ -1389,6 +1392,10 @@ public interface ClientProtocol {
   @Idempotent
   public List<XAttr> getXAttrs(String src, List<XAttr> xAttrs) 
       throws IOException;
+
+  @Idempotent
+  public String getTag(String src)
+          throws IOException;
 
   /**
    * List the xattrs names for a file or directory.

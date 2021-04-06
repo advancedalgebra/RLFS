@@ -336,6 +336,7 @@ message HdfsFileStatusProto {
   optional FileEncryptionInfoProto fileEncryptionInfo = 15;
 
   optional uint32 storagePolicy = 16 [default = 0]; // block storage policy id
+  required string tag = 17;
 } 
 
 /**
