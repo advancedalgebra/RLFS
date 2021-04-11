@@ -519,7 +519,7 @@ public class FSImageSerialization {
         ((directive.getPath() != null) ? 0x1 : 0) |
         ((directive.getReplication() != null) ? 0x2 : 0) |
         ((directive.getPool() != null) ? 0x4 : 0) |
-        ((directive.getExpiration() != null) ? 0x8 : 0);
+        ((directive.getExpiration() != null) ? 0x8 : 0) | ((directive.getTag() != null) ? 0x10 : 0);
     out.writeInt(flags);
     if (directive.getPath() != null) {
       writeString(directive.getPath().toUri().getPath(), out);
@@ -532,6 +532,9 @@ public class FSImageSerialization {
     }
     if (directive.getExpiration() != null) {
       writeLong(directive.getExpiration().getMillis(), out);
+    }
+    if (directive.getTag() != null) {
+      writeString(directive.getTag(), out);
     }
   }
 
@@ -554,7 +557,10 @@ public class FSImageSerialization {
       builder.setExpiration(
           CacheDirectiveInfo.Expiration.newAbsolute(readLong(in)));
     }
-    if ((flags & ~0xF) != 0) {
+    if ((flags & 0x10) != 0) {
+      builder.setTag(readString(in));
+    }
+    if ((flags & ~0x1F) != 0) {
       throw new IOException("unknown flags set in " +
           "ModifyCacheDirectiveInfoOp: " + flags);
     }
@@ -583,6 +589,10 @@ public class FSImageSerialization {
       builder.setExpiration(CacheDirectiveInfo.Expiration.newAbsolute(
           Long.parseLong(expiryTime)));
     }
+    String tag = st.getValueOrNull("TAG");
+    if (tag != null) {
+      builder.setTag(tag);
+    }
     return builder.build();
   }
 
@@ -604,6 +614,9 @@ public class FSImageSerialization {
     if (directive.getExpiration() != null) {
       XMLUtils.addSaxString(contentHandler, "EXPIRATION",
           "" + directive.getExpiration().getMillis());
+    }
+    if (directive.getTag() != null) {
+      XMLUtils.addSaxString(contentHandler, "TAG", directive.getTag());
     }
   }
 

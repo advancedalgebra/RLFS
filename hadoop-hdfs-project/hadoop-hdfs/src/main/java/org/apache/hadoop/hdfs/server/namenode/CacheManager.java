@@ -53,15 +53,8 @@ import org.apache.hadoop.fs.UnresolvedLinkException;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.DFSUtil;
-import org.apache.hadoop.hdfs.protocol.CacheDirective;
-import org.apache.hadoop.hdfs.protocol.CacheDirectiveEntry;
-import org.apache.hadoop.hdfs.protocol.CacheDirectiveInfo;
+import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.protocol.CacheDirectiveInfo.Expiration;
-import org.apache.hadoop.hdfs.protocol.CacheDirectiveStats;
-import org.apache.hadoop.hdfs.protocol.CachePoolEntry;
-import org.apache.hadoop.hdfs.protocol.CachePoolInfo;
-import org.apache.hadoop.hdfs.protocol.DatanodeID;
-import org.apache.hadoop.hdfs.protocol.LocatedBlock;
 import org.apache.hadoop.hdfs.protocol.proto.ClientNamenodeProtocolProtos.CacheDirectiveInfoProto;
 import org.apache.hadoop.hdfs.protocol.proto.ClientNamenodeProtocolProtos.CachePoolInfoProto;
 import org.apache.hadoop.hdfs.protocolPB.PBHelper;
@@ -83,6 +76,7 @@ import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.util.GSet;
 import org.apache.hadoop.util.LightWeightGSet;
 import org.apache.hadoop.util.Time;
+import org.mortbay.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -531,7 +525,8 @@ public final class CacheManager {
       // All validation passed
       // Add a new entry with the next available ID.
       long id = getNextDirectiveId();
-      directive = new CacheDirective(id, path, replication, expiryTime);
+      HdfsFileStatus fileStatus = namesystem.getFileInfo(path, true);
+      directive = new CacheDirective(id, path, replication, expiryTime, fileStatus.getTag());
       addInternal(directive, pool);
     } catch (IOException e) {
       LOG.warn("addDirective of " + info + " failed: ", e);
@@ -712,13 +707,14 @@ public final class CacheManager {
     int numReplies = 0;
     SortedMap<Long, CacheDirective> tailMap =
       directivesById.tailMap(prevId + 1);
+    Log.info("directivesById: " + directivesById);
     for (Entry<Long, CacheDirective> cur : tailMap.entrySet()) {
       if (numReplies >= maxListCacheDirectivesNumResponses) {
         return new BatchedListEntries<CacheDirectiveEntry>(replies, true);
       }
       CacheDirective curDirective = cur.getValue();
       CacheDirectiveInfo info = cur.getValue().toInfo();
-
+      Log.info("Info: " + info);
       // If the requested ID is present, it should be the first item.
       // Hitting this case means the ID is not present, or we're on the second
       // item and should break out.

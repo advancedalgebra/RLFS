@@ -488,7 +488,7 @@ public class CacheAdmin extends Configured implements Tool {
           addField("POOL", Justification.LEFT).
           addField("REPL", Justification.RIGHT).
           addField("EXPIRY", Justification.LEFT).
-          addField("PATH", Justification.LEFT);
+          addField("PATH", Justification.LEFT).addField("TAG", Justification.LEFT);
       if (printStats) {
         tableBuilder.addField("BYTES_NEEDED", Justification.RIGHT).
                     addField("BYTES_CACHED", Justification.RIGHT).
@@ -519,6 +519,7 @@ public class CacheAdmin extends Configured implements Tool {
           }
           row.add(expiry);
           row.add(directive.getPath().toUri().getPath());
+          row.add(directive.getTag());
           if (printStats) {
             row.add("" + stats.getBytesNeeded());
             row.add("" + stats.getBytesCached());

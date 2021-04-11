@@ -3717,6 +3717,7 @@ public abstract class FSEditLogOp {
       assert(directive.getReplication() != null);
       assert(directive.getPool() != null);
       assert(directive.getExpiration() != null);
+      assert(directive.getTag() != null);
       return this;
     }
 
@@ -3752,7 +3753,8 @@ public abstract class FSEditLogOp {
       builder.append("path=" + directive.getPath().toUri().getPath() + ",");
       builder.append("replication=" + directive.getReplication() + ",");
       builder.append("pool=" + directive.getPool() + ",");
-      builder.append("expiration=" + directive.getExpiration().getMillis());
+      builder.append("expiration=" + directive.getExpiration().getMillis() + ",");
+      builder.append("tag=" + directive.getTag());
       appendRpcIdsToString(builder, rpcClientId, rpcCallId);
       builder.append("]");
       return builder.toString();
@@ -3829,6 +3831,9 @@ public abstract class FSEditLogOp {
       if (directive.getExpiration() != null) {
         builder.append(",").append("expiration=").
             append(directive.getExpiration().getMillis());
+      }
+      if (directive.getTag() != null) {
+        builder.append(",").append("tag=").append(directive.getTag());
       }
       appendRpcIdsToString(builder, rpcClientId, rpcCallId);
       builder.append("]");

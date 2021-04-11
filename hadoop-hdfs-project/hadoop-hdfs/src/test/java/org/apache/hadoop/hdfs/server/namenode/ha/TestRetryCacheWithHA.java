@@ -787,7 +787,7 @@ public class TestRetryCacheWithHA {
             dfs.listCacheDirectives(
                 new CacheDirectiveInfo.Builder().
                     setPool(directive.getPool()).
-                    setPath(directive.getPath()).
+                    setPath(directive.getPath()).setTag(directive.getTag()).
                     build());
         if (iter.hasNext()) {
           return true;

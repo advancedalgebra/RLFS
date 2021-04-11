@@ -353,7 +353,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
       status = new FileStatus(stat.getLen(), stat.isDir(),
           stat.getReplication(), stat.getBlockSize(), stat.getModificationTime(),
           stat.getAccessTime(), stat.getPermission(), stat.getOwner(),
-          stat.getGroup(), symlink, path, "FsNamesystem");
+          stat.getGroup(), symlink, path, stat.getTag());
     }
     for (AuditLogger logger : auditLoggers) {
       if (logger instanceof HdfsAuditLogger) {
@@ -7640,6 +7640,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
 
       String effectiveDirectiveStr = effectiveDirective != null ?
           effectiveDirective.toString() : null;
+      org.mortbay.log.Log.info("effectiveDirectiveStr: " + effectiveDirectiveStr);
       logAuditEvent(success, "addCacheDirective", effectiveDirectiveStr,
           null, null);
     }
