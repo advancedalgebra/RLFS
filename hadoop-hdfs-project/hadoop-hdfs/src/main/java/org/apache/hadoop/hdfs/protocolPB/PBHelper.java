@@ -2101,6 +2101,9 @@ public class PBHelper {
     if (info.getPool() != null) {
       builder.setPool(info.getPool());
     }
+    if (info.getTag() != null) {
+      builder.setTag(info.getTag());
+    }
     if (info.getExpiration() != null) {
       builder.setExpiration(convert(info.getExpiration()));
     }
@@ -2113,6 +2116,9 @@ public class PBHelper {
         new CacheDirectiveInfo.Builder();
     if (proto.hasId()) {
       builder.setId(proto.getId());
+    }
+    if (proto.hasTag()) {
+      builder.setTag(proto.getTag());
     }
     if (proto.hasPath()) {
       builder.setPath(new Path(proto.getPath()));

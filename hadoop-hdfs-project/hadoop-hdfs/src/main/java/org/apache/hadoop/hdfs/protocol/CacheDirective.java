@@ -49,6 +49,8 @@ public final class CacheDirective implements IntrusiveCollection.Element {
   private long filesNeeded;
   private long filesCached;
 
+  private String tag;
+
   private Element prev;
   private Element next;
 
@@ -57,7 +59,7 @@ public final class CacheDirective implements IntrusiveCollection.Element {
         info.getId(),
         info.getPath().toUri().getPath(),
         info.getReplication(),
-        info.getExpiration().getAbsoluteMillis());
+        info.getExpiration().getAbsoluteMillis(), info.getTag());
   }
 
   public CacheDirective(long id, String path,
@@ -68,6 +70,18 @@ public final class CacheDirective implements IntrusiveCollection.Element {
     Preconditions.checkArgument(replication > 0);
     this.replication = replication;
     this.expiryTime = expiryTime;
+    this.tag = "default";
+  }
+
+  public CacheDirective(long id, String path,
+                        short replication, long expiryTime, String tag) {
+    Preconditions.checkArgument(id > 0);
+    this.id = id;
+    this.path = checkNotNull(path);
+    Preconditions.checkArgument(replication > 0);
+    this.replication = replication;
+    this.expiryTime = expiryTime;
+    this.tag = tag;
   }
 
   public long getId() {
@@ -76,6 +90,10 @@ public final class CacheDirective implements IntrusiveCollection.Element {
 
   public String getPath() {
     return path;
+  }
+
+  public String getTag() {
+    return tag;
   }
 
   public short getReplication() {
@@ -110,7 +128,7 @@ public final class CacheDirective implements IntrusiveCollection.Element {
         setId(id).
         setPath(new Path(path)).
         setReplication(replication).
-        setPool(pool.getPoolName()).
+        setPool(pool.getPoolName()).setTag(tag).
         setExpiration(CacheDirectiveInfo.Expiration.newAbsolute(expiryTime)).
         build();
   }
@@ -133,7 +151,7 @@ public final class CacheDirective implements IntrusiveCollection.Element {
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("{ id:").append(id).
-      append(", path:").append(path).
+      append(", path:").append(path).append(", tag:").append(tag).
       append(", replication:").append(replication).
       append(", pool:").append(pool).
       append(", expiryTime: ").append(getExpiryTimeString()).

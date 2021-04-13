@@ -442,6 +442,7 @@ message CacheDirectiveInfoProto {
   optional uint32 replication = 3;
   optional string pool = 4;
   optional CacheDirectiveInfoExpirationProto expiration = 5;
+  optional string tag = 6;
 }
 
 message CacheDirectiveInfoExpirationProto {

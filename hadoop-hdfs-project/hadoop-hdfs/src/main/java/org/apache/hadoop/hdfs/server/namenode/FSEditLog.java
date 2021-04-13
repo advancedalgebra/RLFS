@@ -427,6 +427,7 @@ public class FSEditLog implements LogsPurgeable {
 
       try {
         editLogStream.write(op);
+        org.mortbay.log.Log.info("op: " + op);
       } catch (IOException ex) {
         // All journals failed, it is handled in logSync.
       } finally {
@@ -1078,6 +1079,8 @@ public class FSEditLog implements LogsPurgeable {
     AddCacheDirectiveInfoOp op =
         AddCacheDirectiveInfoOp.getInstance(cache.get())
             .setDirective(directive);
+    org.mortbay.log.Log.info("OP: " + op);
+    org.mortbay.log.Log.info("directive: " + directive);
     logRpcIds(op, toLogRpcIds);
     logEdit(op);
   }

@@ -24,6 +24,7 @@ import org.apache.hadoop.hdfs.protocol.CacheDirectiveInfo;
 import org.apache.hadoop.hdfs.protocol.CachePoolEntry;
 import org.apache.hadoop.hdfs.protocol.CachePoolInfo;
 import org.apache.hadoop.security.AccessControlException;
+import org.mortbay.log.Log;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -43,6 +44,7 @@ class FSNDNCacheOp {
     }
     CacheDirectiveInfo effectiveDirective =
         cacheManager.addDirective(directive, pc, flags);
+    Log.info("effectiveDirective: " + effectiveDirective);
     fsn.getEditLog().logAddCacheDirectiveInfo(effectiveDirective,
         logRetryCache);
     return effectiveDirective;

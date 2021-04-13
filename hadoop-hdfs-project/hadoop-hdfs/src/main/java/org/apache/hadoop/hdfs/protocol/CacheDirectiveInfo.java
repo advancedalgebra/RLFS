@@ -43,6 +43,7 @@ public class CacheDirectiveInfo {
     private Short replication;
     private String pool;
     private Expiration expiration;
+    private String tag;
 
     /**
      * Builds a new CacheDirectiveInfo populated with the set properties.
@@ -50,7 +51,7 @@ public class CacheDirectiveInfo {
      * @return New CacheDirectiveInfo.
      */
     public CacheDirectiveInfo build() {
-      return new CacheDirectiveInfo(id, path, replication, pool, expiration);
+      return new CacheDirectiveInfo(id, path, replication, pool, expiration, tag);
     }
 
     /**
@@ -69,6 +70,7 @@ public class CacheDirectiveInfo {
       this.replication = directive.getReplication();
       this.pool = directive.getPool();
       this.expiration = directive.getExpiration();
+      this.tag = directive.getTag();
     }
 
     /**
@@ -112,6 +114,11 @@ public class CacheDirectiveInfo {
      */
     public Builder setPool(String pool) {
       this.pool = pool;
+      return this;
+    }
+
+    public Builder setTag(String tag) {
+      this.tag = tag;
       return this;
     }
 
@@ -255,15 +262,27 @@ public class CacheDirectiveInfo {
   private final Short replication;
   private final String pool;
   private final Expiration expiration;
+  private final String tag;
 
   CacheDirectiveInfo(Long id, Path path, Short replication, String pool,
-      Expiration expiration) {
+                     Expiration expiration, String tag) {
     this.id = id;
     this.path = path;
     this.replication = replication;
     this.pool = pool;
     this.expiration = expiration;
+    this.tag = tag;
   }
+
+//  CacheDirectiveInfo(Long id, Path path, Short replication, String pool,
+//                     Expiration expiration) {
+//    this.id = id;
+//    this.path = path;
+//    this.replication = replication;
+//    this.pool = pool;
+//    this.expiration = expiration;
+//    this.tag = "default";
+//  }
 
   /**
    * @return The ID of this directive.
@@ -293,6 +312,10 @@ public class CacheDirectiveInfo {
     return pool;
   }
 
+  public String getTag() {
+    return tag;
+  }
+
   /**
    * @return When this directive expires.
    */
@@ -312,7 +335,7 @@ public class CacheDirectiveInfo {
     return new EqualsBuilder().append(getId(), other.getId()).
         append(getPath(), other.getPath()).
         append(getReplication(), other.getReplication()).
-        append(getPool(), other.getPool()).
+        append(getPool(), other.getPool()).append(getTag(), other.getTag()).
         append(getExpiration(), other.getExpiration()).
         isEquals();
   }
@@ -323,7 +346,7 @@ public class CacheDirectiveInfo {
         append(path).
         append(replication).
         append(pool).
-        append(expiration).
+        append(expiration).append(tag).
         hashCode();
   }
 
@@ -350,6 +373,10 @@ public class CacheDirectiveInfo {
     }
     if (expiration != null) {
       builder.append(prefix).append("expiration: ").append(expiration);
+      prefix = ", ";
+    }
+    if (tag != null) {
+      builder.append(prefix).append("tag: ").append(tag);
       prefix = ", ";
     }
     builder.append("}");
