@@ -78,7 +78,7 @@ public class IOUtils {
    * @param out OutputStream to write to
    * @param buffSize the size of the buffer 
    */
-  public static void copyBytes(InputStream in, OutputStream out, int buffSize) 
+  public static void copyBytes(InputStream in, OutputStream out, int buffSize)
     throws IOException {
     PrintStream ps = out instanceof PrintStream ? (PrintStream)out : null;
     byte buf[] = new byte[buffSize];
