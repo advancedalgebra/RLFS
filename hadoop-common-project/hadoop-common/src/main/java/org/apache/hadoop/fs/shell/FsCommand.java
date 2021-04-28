@@ -53,6 +53,7 @@ abstract public class FsCommand extends Command {
     factory.registerCommands(Find.class);
     factory.registerCommands(FsShellPermissions.class);
     factory.registerCommands(FsUsage.class);
+    factory.registerCommands(GetTag.class);
     factory.registerCommands(Ls.class);
     factory.registerCommands(Mkdir.class);
     factory.registerCommands(MoveCommands.class);
